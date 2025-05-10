@@ -9,7 +9,7 @@ interface FinanceCardProps {
 
 export function FinanceCard({ title, description, icon }: FinanceCardProps) {
   return (
-    <article className="bg-[#222832] border border-[#333945] w-[180px] p-5 rounded-xl hover:bg-[#262d39] transition-colors cursor-pointer">
+    <article className="bg-[#151515] border border-[#333945] w-[180px] p-5 rounded-xl hover:bg-[#1c1c1c] transition-colors cursor-pointer card-hover animate-fade-in">
       <div className="mb-2">{icon}</div>
       <div>
         <h2 className="text-xl text-white font-semibold">{title}</h2>

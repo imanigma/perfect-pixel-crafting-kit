@@ -5,89 +5,82 @@
 
 @layer base {
   :root {
-    --background: 220 24% 14%;
+    --background: 0 0% 0%;
     --foreground: 0 0% 100%;
 
-    --card: 218 24% 17%;
+    --card: 225 10% 8%;
     --card-foreground: 0 0% 100%;
 
-    --popover: 218 24% 17%;
+    --popover: 225 10% 8%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 258 76% 74%;
+    --primary: 224 50% 44%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 217 10% 18%;
+    --secondary: 240 2% 8%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 217 10% 18%;
-    --muted-foreground: 220 10% 58%;
+    --muted: 240 2% 14%;
+    --muted-foreground: 220 10% 70%;
 
-    --accent: 258 29% 54%;
+    --accent: 224 50% 44%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 12% 24%;
-    --input: 220 12% 24%;
-    --ring: 258 76% 74%;
+    --border: 240 2% 14%;
+    --input: 240 2% 14%;
+    --ring: 224 50% 44%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 218 24% 17%;
-
+    --sidebar-background: 225 10% 8%;
     --sidebar-foreground: 0 0% 100%;
-
-    --sidebar-primary: 258 76% 74%;
-
+    --sidebar-primary: 260 76% 63%;
     --sidebar-primary-foreground: 0 0% 100%;
-
-    --sidebar-accent: 217 10% 18%;
-
+    --sidebar-accent: 240 2% 14%;
     --sidebar-accent-foreground: 0 0% 100%;
-
-    --sidebar-border: 220 12% 24%;
-
-    --sidebar-ring: 258 76% 74%;
+    --sidebar-border: 240 2% 14%;
+    --sidebar-ring: 260 76% 63%;
   }
 
   .dark {
-    --background: 220 24% 14%;
+    --background: 0 0% 0%;
     --foreground: 0 0% 100%;
 
-    --card: 218 24% 17%;
+    --card: 225 10% 8%;
     --card-foreground: 0 0% 100%;
 
-    --popover: 218 24% 17%;
+    --popover: 225 10% 8%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 258 76% 74%;
+    --primary: 224 50% 44%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 217 10% 18%;
+    --secondary: 240 2% 8%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 217 10% 18%;
-    --muted-foreground: 220 10% 58%;
+    --muted: 240 2% 14%;
+    --muted-foreground: 220 10% 70%;
 
-    --accent: 258 29% 54%;
+    --accent: 224 50% 44%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 12% 24%;
-    --input: 220 12% 24%;
-    --ring: 258 76% 74%;
-    --sidebar-background: 218 24% 17%;
+    --border: 240 2% 14%;
+    --input: 240 2% 14%;
+    --ring: 224 50% 44%;
+    --sidebar-background: 225 10% 8%;
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 258 76% 74%;
+    --sidebar-primary: 260 76% 63%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 217 10% 18%;
+    --sidebar-accent: 240 2% 14%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 220 12% 24%;
-    --sidebar-ring: 258 76% 74%;
+    --sidebar-border: 240 2% 14%;
+    --sidebar-ring: 260 76% 63%;
   }
 }
 
@@ -97,7 +90,67 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-poppins;
   }
+}
+
+/* Micro-interactions and animations */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:translate-y-[-5px];
+}
+
+/* Card styles */
+.tr-card {
+  @apply bg-card rounded-xl border border-border/40 shadow-sm backdrop-blur-sm;
 }
 

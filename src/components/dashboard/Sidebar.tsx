@@ -3,9 +3,9 @@ import React from "react";
 
 export function Sidebar() {
   return (
-    <aside className="w-[109px] bg-[#222832] border-r border-[#333945] flex flex-col items-center gap-[241px] py-[58px] max-sm:hidden">
+    <aside className="w-[109px] bg-[#151515] border-r border-[#333945] flex flex-col items-center gap-[241px] py-[58px] max-sm:hidden">
       <div className="flex flex-col items-center gap-[42px]">
-        <div className="w-[50px] h-[50px] rounded-full bg-[#9b87f5] flex items-center justify-center text-white font-bold text-xl">
+        <div className="w-[50px] h-[50px] rounded-full bg-[#2751B9] flex items-center justify-center text-white font-bold text-xl">
           TR
         </div>
         <div>
@@ -15,9 +15,9 @@ export function Sidebar() {
             viewBox="0 0 61 57"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="flex h-[57px] p-[16px_15px] justify-center items-center gap-[10px] w-[61px] rounded-[8px] bg-[#9b87f5]"
+            className="flex h-[57px] p-[16px_15px] justify-center items-center gap-[10px] w-[61px] rounded-[8px] bg-[#2751B9]"
           >
-            <rect width="61" height="57" rx="8" fill="#9b87f5"></rect>
+            <rect width="61" height="57" rx="8" fill="#2751B9"></rect>
             <path
               d="M40.5 25.02V20.48C40.5 19.07 39.86 18.5 38.27 18.5H34.23C32.64 18.5 32 19.07 32 20.48V25.01C32 26.43 32.64 26.99 34.23 26.99H38.27C39.86 27 40.5 26.43 40.5 25.02Z"
               fill="white"
@@ -37,7 +37,7 @@ export function Sidebar() {
           </svg>
         </div>
         <nav className="flex flex-col items-center gap-6">
-          <button aria-label="Analytics" className="text-white hover:text-[#9b87f5] transition-colors focus:outline-none">
+          <button aria-label="Analytics" className="text-white hover:text-[#2751B9] transition-colors focus:outline-none">
             <svg
               width="24"
               height="24"
@@ -56,7 +56,7 @@ export function Sidebar() {
             </svg>
           </button>
           
-          <button aria-label="Wallet" className="text-white hover:text-[#9b87f5] transition-colors focus:outline-none">
+          <button aria-label="Wallet" className="text-white hover:text-[#2751B9] transition-colors focus:outline-none">
             <svg
               width="24"
               height="24"
@@ -75,7 +75,7 @@ export function Sidebar() {
             </svg>
           </button>
           
-          <button aria-label="Profile" className="text-white hover:text-[#9b87f5] transition-colors focus:outline-none">
+          <button aria-label="Profile" className="text-white hover:text-[#2751B9] transition-colors focus:outline-none">
             <svg
               width="24"
               height="24"
@@ -94,7 +94,7 @@ export function Sidebar() {
             </svg>
           </button>
           
-          <button aria-label="Settings" className="text-white hover:text-[#9b87f5] transition-colors focus:outline-none">
+          <button aria-label="Settings" className="text-white hover:text-[#2751B9] transition-colors focus:outline-none">
             <svg
               width="24"
               height="24"
@@ -120,7 +120,7 @@ export function Sidebar() {
             </svg>
           </button>
           
-          <button aria-label="Security" className="text-white hover:text-[#9b87f5] transition-colors focus:outline-none">
+          <button aria-label="Security" className="text-white hover:text-[#2751B9] transition-colors focus:outline-none">
             <svg
               width="24"
               height="24"
@@ -139,7 +139,7 @@ export function Sidebar() {
             </svg>
           </button>
           
-          <button aria-label="Help" className="text-white hover:text-[#9b87f5] transition-colors focus:outline-none">
+          <button aria-label="Help" className="text-white hover:text-[#2751B9] transition-colors focus:outline-none">
             <svg
               width="24"
               height="24"
@@ -158,7 +158,7 @@ export function Sidebar() {
             </svg>
           </button>
           
-          <button aria-label="Dark Mode" className="text-[#9b87f5] focus:outline-none">
+          <button aria-label="Dark Mode" className="text-[#2751B9] focus:outline-none">
             <svg
               width="24"
               height="24"
@@ -180,7 +180,7 @@ export function Sidebar() {
         </nav>
       </div>
       <div>
-        <div className="w-[60px] h-[60px] rounded-full bg-[#D6BCFA] flex items-center justify-center text-[#1A1F2C] font-bold text-xl">
+        <div className="w-[60px] h-[60px] rounded-full bg-[#D6BCFA] flex items-center justify-center text-[#000000] font-bold text-xl">
           TR
         </div>
       </div>

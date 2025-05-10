@@ -12,7 +12,7 @@ export function FinanceCards() {
       xmlns="http://www.w3.org/2000/svg"
       className="w-[50px] h-[50px]"
     >
-      <rect x="10" y="10" width="45" height="45" rx="10" fill="#9b87f5"></rect>
+      <rect x="10" y="10" width="45" height="45" rx="10" fill="#2751B9"></rect>
       <path
         d="M27.0069 39.6844C27.0717 40.2329 27.5689 40.625 28.1173 40.5602L37.0551 39.5037C37.6036 39.4389 37.9957 38.9417 37.9308 38.3932C37.866 37.8448 37.3688 37.4527 36.8204 37.5175L28.8757 38.4566L27.9366 30.5119C27.8718 29.9634 27.3746 29.5714 26.8261 29.6362C26.2777 29.701 25.8856 30.1982 25.9504 30.7467L27.0069 39.6844ZM39.1459 25.4331L38.3607 24.8139L27.2147 38.9478L28 39.5671L28.7852 40.1863L39.9311 26.0523L39.1459 25.4331Z"
         fill="white"
@@ -29,7 +29,7 @@ export function FinanceCards() {
       xmlns="http://www.w3.org/2000/svg"
       className="w-[50px] h-[50px]"
     >
-      <rect x="10" y="10" width="45" height="45" rx="10" fill="#7E69AB"></rect>
+      <rect x="10" y="10" width="45" height="45" rx="10" fill="#3D56B0"></rect>
       <path
         d="M40 25L32.5 20L25 25M40 25L32.5 30M40 25V35M32.5 30L25 25M32.5 30V40M25 25V35L32.5 40L40 35"
         stroke="white"
@@ -49,7 +49,7 @@ export function FinanceCards() {
       xmlns="http://www.w3.org/2000/svg"
       className="w-[50px] h-[50px]"
     >
-      <rect x="10" y="10" width="45" height="45" rx="10" fill="#D6BCFA"></rect>
+      <rect x="10" y="10" width="45" height="45" rx="10" fill="#5169C8"></rect>
       <path
         d="M32.5 20V32.5M32.5 20L27.5 25M32.5 20L37.5 25M20 32.5H32.5M20 32.5L25 27.5M20 32.5L25 37.5M32.5 45V32.5M32.5 45L27.5 40M32.5 45L37.5 40M45 32.5H32.5M45 32.5L40 27.5M45 32.5L40 37.5"
         stroke="white"
