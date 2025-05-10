@@ -1,3 +1,4 @@
+
 import React from "react";
 
 interface FinanceCardProps {
@@ -8,11 +9,11 @@ interface FinanceCardProps {
 
 export function FinanceCard({ title, description, icon }: FinanceCardProps) {
   return (
-    <article className="bg-[#1D1D41] w-[166px] p-4 rounded-3xl">
-      <div>{icon}</div>
-      <div className="mt-1">
-        <h2 className="text-2xl text-white font-bold">{title}</h2>
-        <p className="text-base text-[#8C89B4]">{description}</p>
+    <article className="bg-[#222832] border border-[#333945] w-[180px] p-5 rounded-xl hover:bg-[#262d39] transition-colors cursor-pointer">
+      <div className="mb-2">{icon}</div>
+      <div>
+        <h2 className="text-xl text-white font-semibold">{title}</h2>
+        <p className="text-sm text-[#8E9196] mt-1">{description}</p>
       </div>
     </article>
   );
