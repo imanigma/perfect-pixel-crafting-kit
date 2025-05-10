@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Brain, BookOpen, Calendar } from "lucide-react";
 
 export function Sidebar() {
   const location = useLocation();
@@ -45,7 +46,7 @@ export function Sidebar() {
           </svg>
         </div>
         <nav className="flex flex-col items-center gap-6">
-          <Link to="/" aria-label="Analytics" className={`text-white ${isActive('/') ? 'text-[#2751B9]' : 'hover:text-[#2751B9]'} transition-colors focus:outline-none`}>
+          <Link to="/" aria-label="Dashboard" className={`text-white ${isActive('/') ? 'text-[#2751B9]' : 'hover:text-[#2751B9]'} transition-colors focus:outline-none`}>
             <svg
               width="24"
               height="24"
@@ -81,6 +82,18 @@ export function Sidebar() {
                 strokeLinejoin="round"
               ></path>
             </svg>
+          </Link>
+
+          <Link to="/ai-advisor" aria-label="AI Advisor" className={`text-white ${isActive('/ai-advisor') ? 'text-[#2751B9]' : 'hover:text-[#2751B9]'} transition-colors focus:outline-none`}>
+            <Brain className="w-[24px] h-[24px]" />
+          </Link>
+
+          <Link to="/financial-narrative" aria-label="Financial Narrative" className={`text-white ${isActive('/financial-narrative') ? 'text-[#2751B9]' : 'hover:text-[#2751B9]'} transition-colors focus:outline-none`}>
+            <BookOpen className="w-[24px] h-[24px]" />
+          </Link>
+
+          <Link to="/finance-journey" aria-label="Finance Journey" className={`text-white ${isActive('/finance-journey') ? 'text-[#2751B9]' : 'hover:text-[#2751B9]'} transition-colors focus:outline-none`}>
+            <Calendar className="w-[24px] h-[24px]" />
           </Link>
           
           <Link to="/profile" aria-label="Profile" className="text-white hover:text-[#2751B9] transition-colors focus:outline-none">

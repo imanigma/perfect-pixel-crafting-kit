@@ -2,6 +2,7 @@
 import React from "react";
 import { FinanceCard } from "./FinanceCard";
 import { useNavigate } from "react-router-dom";
+import { Brain, BookOpen, Calendar } from "lucide-react";
 
 export function FinanceCards() {
   const navigate = useNavigate();
@@ -87,10 +88,16 @@ export function FinanceCards() {
     </svg>
   );
 
+  const aiAdvisorIcon = <Brain className="w-[50px] h-[50px] text-[#2751B9]" />;
+  
+  const narrativeIcon = <BookOpen className="w-[50px] h-[50px] text-[#2751B9]" />;
+  
+  const journeyIcon = <Calendar className="w-[50px] h-[50px] text-[#2751B9]" />;
+
   return (
-    <div className="absolute left-[236px] top-10 max-md:left-[100px] max-sm:left-5">
-      <div className="grid grid-cols-2 gap-[640px] max-md:gap-[300px] max-sm:gap-5 max-sm:grid-cols-1">
-        <div className="flex flex-col gap-5">
+    <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full max-w-6xl">
+      <div className="flex flex-wrap justify-center items-center gap-8">
+        <div className="grid grid-cols-4 max-lg:grid-cols-2 max-sm:grid-cols-1 gap-8">
           <FinanceCard
             title="Stocks"
             description="Commission-free trading"
@@ -103,8 +110,6 @@ export function FinanceCards() {
             icon={etfIcon}
             onClick={() => handleCardClick('/etfs')}
           />
-        </div>
-        <div className="flex flex-col gap-5">
           <FinanceCard
             title="Crypto"
             description="Digital assets 24/7"
@@ -116,6 +121,24 @@ export function FinanceCards() {
             description="Interest-bearing plans"
             icon={savingsIcon}
             onClick={() => handleCardClick('/savings')}
+          />
+          <FinanceCard
+            title="AI Advisor"
+            description="Investment strategies from legendary investors"
+            icon={aiAdvisorIcon}
+            onClick={() => handleCardClick('/ai-advisor')}
+          />
+          <FinanceCard
+            title="Financial Story"
+            description="Your finances as engaging narratives"
+            icon={narrativeIcon}
+            onClick={() => handleCardClick('/financial-narrative')}
+          />
+          <FinanceCard
+            title="Finance Journey"
+            description="Visualize your daily financial life"
+            icon={journeyIcon}
+            onClick={() => handleCardClick('/finance-journey')}
           />
         </div>
       </div>
