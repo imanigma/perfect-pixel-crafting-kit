@@ -1,7 +1,15 @@
 
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 export function Sidebar() {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  const isActive = (path: string) => {
+    return currentPath === path;
+  };
+
   return (
     <aside className="w-[109px] bg-[#151515] border-r border-[#333945] flex flex-col items-center gap-[241px] py-[58px] max-sm:hidden">
       <div className="flex flex-col items-center gap-[42px]">
@@ -37,7 +45,7 @@ export function Sidebar() {
           </svg>
         </div>
         <nav className="flex flex-col items-center gap-6">
-          <button aria-label="Analytics" className="text-white hover:text-[#2751B9] transition-colors focus:outline-none">
+          <Link to="/" aria-label="Analytics" className={`text-white ${isActive('/') ? 'text-[#2751B9]' : 'hover:text-[#2751B9]'} transition-colors focus:outline-none`}>
             <svg
               width="24"
               height="24"
@@ -54,9 +62,9 @@ export function Sidebar() {
                 strokeLinejoin="round"
               ></path>
             </svg>
-          </button>
+          </Link>
           
-          <button aria-label="Wallet" className="text-white hover:text-[#2751B9] transition-colors focus:outline-none">
+          <Link to="/stocks" aria-label="Stocks" className={`text-white ${isActive('/stocks') ? 'text-[#2751B9]' : 'hover:text-[#2751B9]'} transition-colors focus:outline-none`}>
             <svg
               width="24"
               height="24"
@@ -73,9 +81,9 @@ export function Sidebar() {
                 strokeLinejoin="round"
               ></path>
             </svg>
-          </button>
+          </Link>
           
-          <button aria-label="Profile" className="text-white hover:text-[#2751B9] transition-colors focus:outline-none">
+          <Link to="/profile" aria-label="Profile" className="text-white hover:text-[#2751B9] transition-colors focus:outline-none">
             <svg
               width="24"
               height="24"
@@ -92,7 +100,7 @@ export function Sidebar() {
                 strokeLinejoin="round"
               ></path>
             </svg>
-          </button>
+          </Link>
           
           <button aria-label="Settings" className="text-white hover:text-[#2751B9] transition-colors focus:outline-none">
             <svg

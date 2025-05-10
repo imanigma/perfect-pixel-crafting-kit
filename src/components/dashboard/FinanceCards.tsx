@@ -1,8 +1,15 @@
 
 import React from "react";
 import { FinanceCard } from "./FinanceCard";
+import { useNavigate } from "react-router-dom";
 
 export function FinanceCards() {
+  const navigate = useNavigate();
+
+  const handleCardClick = (route: string) => {
+    navigate(route);
+  };
+
   const stocksIcon = (
     <svg
       width="50"
@@ -88,11 +95,13 @@ export function FinanceCards() {
             title="Stocks"
             description="Commission-free trading"
             icon={stocksIcon}
+            onClick={() => handleCardClick('/stocks')}
           />
           <FinanceCard
             title="ETFs"
             description="Global index funds"
             icon={etfIcon}
+            onClick={() => handleCardClick('/etfs')}
           />
         </div>
         <div className="flex flex-col gap-5">
@@ -100,11 +109,13 @@ export function FinanceCards() {
             title="Crypto"
             description="Digital assets 24/7"
             icon={cryptoIcon}
+            onClick={() => handleCardClick('/crypto')}
           />
           <FinanceCard
             title="Savings"
             description="Interest-bearing plans"
             icon={savingsIcon}
+            onClick={() => handleCardClick('/savings')}
           />
         </div>
       </div>
