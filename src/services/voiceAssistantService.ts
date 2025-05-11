@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 import { toast } from "@/components/ui/sonner";
 
@@ -257,7 +258,7 @@ class VoiceAssistantService {
               outerRadius={100}
               fill="#2751B9"
               dataKey="value"
-              label={(entry) => `${entry.name} ${(entry.percent * 100).toFixed(0)}%`}
+              label={function(entry) { return entry.name + " " + Math.floor(entry.percent * 100) + "%"; }}
             >
               {data.map((entry, index) => (
                 <Cell key={index} fill={['#2751B9', '#3962c8', '#6089db', '#87a7e7', '#afc5f0'][index % 5]} />
