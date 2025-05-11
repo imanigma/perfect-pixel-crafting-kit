@@ -1,18 +1,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { toast } from '@/components/ui/sonner';
-import { pythonBackendService } from '@/services/pythonBackendService';
-
-interface VoiceAssistantMessage {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-}
-
-interface UseVoiceAssistantOptions {
-  onProcessStart?: () => void;
-  onProcessEnd?: () => void;
-  genZMode?: boolean;
-}
+import { VoiceAssistantMessage, UseVoiceAssistantOptions } from '@/features/voice/types';
+import { audioUtils, setupSpeechRecognition } from '@/features/voice/audioUtils';
+import { voiceProcessingService } from '@/features/voice/voiceProcessingService';
 
 export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
   const [isListening, setIsListening] = useState(false);
@@ -27,10 +18,11 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   // Create audio element for playback
   useEffect(() => {
-    audioRef.current = new Audio();
+    audioRef.current = audioUtils.createAudioElement();
     audioRef.current.onplay = () => setIsSpeaking(true);
     audioRef.current.onended = () => setIsSpeaking(false);
 
@@ -39,34 +31,33 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
         audioRef.current.pause();
         audioRef.current = null;
       }
+      
+      // Clean up any active media stream
+      if (streamRef.current) {
+        audioUtils.cleanupMediaStream(streamRef.current);
+      }
     };
   }, []);
 
   // Setup SpeechRecognition
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+    recognitionRef.current = setupSpeechRecognition();
+    
+    if (recognitionRef.current) {
+      recognitionRef.current.onresult = (event: any) => {
+        const transcript = Array.from(event.results)
+          .map((result: any) => result[0])
+          .map((result: any) => result.transcript)
+          .join("");
+        
+        setUserInput(transcript);
+      };
       
-      if (SpeechRecognition) {
-        recognitionRef.current = new SpeechRecognition();
-        recognitionRef.current.continuous = true;
-        recognitionRef.current.interimResults = true;
-        
-        recognitionRef.current.onresult = (event: any) => {
-          const transcript = Array.from(event.results)
-            .map((result: any) => result[0])
-            .map((result: any) => result.transcript)
-            .join("");
-          
-          setUserInput(transcript);
-        };
-        
-        recognitionRef.current.onerror = (event: any) => {
-          console.error("Speech recognition error", event.error);
-          setIsListening(false);
-          toast.error("Speech recognition error. Please try again.");
-        };
-      }
+      recognitionRef.current.onerror = (event: any) => {
+        console.error("Speech recognition error", event.error);
+        setIsListening(false);
+        toast.error("Speech recognition error. Please try again.");
+      };
     }
     
     return () => {
@@ -88,11 +79,11 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
     }
 
     try {
-      // Request microphone access first
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Request microphone access and start recording
+      const { mediaRecorder, stream } = await audioUtils.startRecording();
       
-      // Setup MediaRecorder for audio capture
-      mediaRecorderRef.current = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      streamRef.current = stream;
       audioChunksRef.current = [];
       
       mediaRecorderRef.current.ondataavailable = (event) => {
@@ -101,8 +92,27 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
         }
       };
       
-      // Start recording
-      mediaRecorderRef.current.start();
+      // Set up what happens when recording stops
+      mediaRecorderRef.current.onstop = async () => {
+        if (audioChunksRef.current.length > 0) {
+          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+          
+          // Add user message to conversation
+          if (userInput.trim()) {
+            setMessages(prev => [...prev, { role: "user", content: userInput }]);
+            
+            // Process the audio
+            await processAudio(audioBlob, userInput);
+          }
+        }
+        
+        // Clean up the media stream
+        if (streamRef.current) {
+          audioUtils.cleanupMediaStream(streamRef.current);
+        }
+      };
+      
+      // Start recognition
       recognitionRef.current.start();
       setIsListening(true);
       setUserInput("");
@@ -121,28 +131,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
       }
       
       if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-        // Finalize the recording
         mediaRecorderRef.current.stop();
-        
-        // Wait for the data to be available
-        mediaRecorderRef.current.onstop = async () => {
-          if (audioChunksRef.current.length > 0) {
-            const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-            
-            // Add user message to conversation
-            if (userInput.trim()) {
-              setMessages(prev => [...prev, { role: "user", content: userInput }]);
-              
-              // Process the audio
-              await processAudio(audioBlob, userInput);
-            }
-          }
-          
-          // Clean up the media stream
-          if (mediaRecorderRef.current?.stream) {
-            mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
-          }
-        };
       }
       
       setIsListening(false);
@@ -159,31 +148,28 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
         options.onProcessStart();
       }
 
-      // Get the current page context - in a real app, this would be more dynamic
-      const pageContext = document.title + " - " + window.location.pathname;
+      // Get the current page context
+      const pageContext = voiceProcessingService.getPageContext();
       
       try {
-        // Process with our Python backend service
-        const responseBlob = await pythonBackendService.processVoiceInput(
+        // Process with our backend service
+        const responseBlob = await voiceProcessingService.processAudio(
           audioBlob, 
+          inputText, 
           pageContext, 
           !!options.genZMode
         );
         
-        // Create a URL for the audio blob
-        const audioUrl = URL.createObjectURL(responseBlob);
-        
-        // Play the audio response
+        // Create a URL for the audio blob and play it
         if (audioRef.current) {
+          const audioUrl = URL.createObjectURL(responseBlob);
           audioRef.current.src = audioUrl;
           audioRef.current.play();
           setIsSpeaking(true);
         }
         
-        // Since we don't have access to the text response from the audio,
-        // we'll add a placeholder response for now
+        // Add AI response to conversation
         setTimeout(() => {
-          // Add AI response to conversation (this would ideally come from the server)
           setMessages(prev => [...prev, { 
             role: "assistant", 
             content: "I've processed your request about " + inputText.substring(0, 30) + "..." 
@@ -195,20 +181,10 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
           }
         }, 500);
       } catch (error) {
-        console.error("Error processing with Python backend:", error);
-        toast.error("Error processing your request. Please try again.");
-        setIsProcessing(false);
-        if (options.onProcessEnd) {
-          options.onProcessEnd();
-        }
+        handleProcessingError();
       }
     } catch (error) {
-      console.error("Error processing audio:", error);
-      setIsProcessing(false);
-      if (options.onProcessEnd) {
-        options.onProcessEnd();
-      }
-      toast.error("Error processing your request. Please try again.");
+      handleProcessingError();
     }
   };
 
@@ -226,33 +202,26 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
       }
       
       // Get the current page context
-      const pageContext = document.title + " - " + window.location.pathname;
-      
-      // Create an empty audio blob for consistency with voice API
-      const emptyAudioBlob = new Blob([], { type: 'audio/webm' });
+      const pageContext = voiceProcessingService.getPageContext();
       
       try {
-        // Process with our Python backend service
-        const responseBlob = await pythonBackendService.processVoiceInput(
-          emptyAudioBlob, 
-          pageContext, 
+        // Process with our backend service
+        const responseBlob = await voiceProcessingService.processTextInput(
+          text,
+          pageContext,
           !!options.genZMode
         );
         
-        // Create a URL for the audio blob
-        const audioUrl = URL.createObjectURL(responseBlob);
-        
         // Play the audio response
         if (audioRef.current) {
+          const audioUrl = URL.createObjectURL(responseBlob);
           audioRef.current.src = audioUrl;
           audioRef.current.play();
           setIsSpeaking(true);
         }
         
-        // Since we don't have access to the text response from the audio,
-        // we'll add a placeholder response for now
+        // Add AI response to conversation
         setTimeout(() => {
-          // Add AI response to conversation (this would ideally come from the server)
           setMessages(prev => [...prev, { 
             role: "assistant", 
             content: "I've processed your text request." 
@@ -265,22 +234,22 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
           }
         }, 500);
       } catch (error) {
-        console.error("Error processing with Python backend:", error);
-        toast.error("Error processing your request. Please try again.");
+        handleProcessingError();
         setUserInput("");
-        setIsProcessing(false);
-        if (options.onProcessEnd) {
-          options.onProcessEnd();
-        }
       }
     } catch (error) {
-      console.error("Error processing text input:", error);
-      setIsProcessing(false);
-      if (options.onProcessEnd) {
-        options.onProcessEnd();
-      }
-      toast.error("Error processing your request. Please try again.");
+      handleProcessingError();
     }
+  };
+
+  // Helper function for handling processing errors
+  const handleProcessingError = () => {
+    console.error("Error processing request");
+    setIsProcessing(false);
+    if (options.onProcessEnd) {
+      options.onProcessEnd();
+    }
+    toast.error("Error processing your request. Please try again.");
   };
 
   return {
