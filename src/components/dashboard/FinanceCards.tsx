@@ -95,7 +95,7 @@ export function FinanceCards() {
   const journeyIcon = <Calendar className="w-[50px] h-[50px] text-[#3962c8]" />;
 
   return (
-    <div className="absolute top-[650px] left-1/2 transform -translate-x-1/2 z-10 w-full max-w-6xl">
+    <div className="w-full max-w-6xl mx-auto px-4 py-20">
       <div className="flex flex-wrap justify-center items-center gap-8">
         <div className="grid grid-cols-4 max-lg:grid-cols-2 max-sm:grid-cols-1 gap-8">
           {/* Standard cards */}
