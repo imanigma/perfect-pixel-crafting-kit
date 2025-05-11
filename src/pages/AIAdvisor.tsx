@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { 
@@ -9,13 +10,6 @@ import {
   CardTitle 
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select";
 import { Brain, RefreshCw, MessageSquare, DollarSign } from "lucide-react";
 import { motion } from "framer-motion";
 import { BuffettPortfolio } from "@/components/advisors/BuffettPortfolio";
@@ -27,20 +21,6 @@ const advisors = [
     description: "Value investing pioneer and CEO of Berkshire Hathaway",
     avatar: "https://upload.wikimedia.org/wikipedia/commons/d/d4/Warren_Buffett_at_the_2015_SelectUSA_Investment_Summit.jpg",
     style: "Focuses on intrinsic value, long-term growth, and companies with strong economic moats"
-  },
-  {
-    id: "lynch",
-    name: "Peter Lynch",
-    description: "Legendary Fidelity fund manager and author",
-    avatar: "https://www.investopedia.com/thmb/OLYgBJXo1VMKYuSXEHCUyI9vAlA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-542419354-5c47229d46e0fb00010d7e85.jpg",
-    style: "Believes in investing in what you know and understand through everyday experiences"
-  },
-  {
-    id: "graham",
-    name: "Benjamin Graham",
-    description: "Father of value investing and Warren Buffett's mentor",
-    avatar: "https://upload.wikimedia.org/wikipedia/en/2/2d/Benjamin_Graham_%281894-1976%29.jpg",
-    style: "Emphasizes margin of safety and analyzes stocks based on their intrinsic value"
   }
 ];
 
@@ -48,14 +28,6 @@ const insights = [
   {
     advisor: "buffett",
     content: "Look for companies with strong economic moats that protect them from competition. In today's market, tech firms with network effects like certain fintech platforms show promise, but be wary of excessive valuations."
-  },
-  {
-    advisor: "lynch",
-    content: "The best stock to buy may be one you already know. Consider the financial services you personally use and trust. If you find yourself repeatedly using a particular fintech app, that's a good sign it has customer loyalty."
-  },
-  {
-    advisor: "graham",
-    content: "Many tech stocks today trade at prices far beyond their intrinsic value. Apply a margin of safety by looking at fintech companies with proven revenue models, not just growth projections. Remember that price is what you pay; value is what you get."
   }
 ];
 
@@ -115,29 +87,11 @@ export default function AIAdvisor() {
             <Brain className="h-6 w-6 text-[#2751B9]" />
             <h1 className="text-3xl font-semibold text-white">AI Investment Strategist</h1>
           </div>
-          <p className="text-[#8E9196] mb-6">Get personalized investment insights from AI clones of legendary investors</p>
+          <p className="text-[#8E9196] mb-6">Get personalized investment insights from the legendary Warren Buffett</p>
           
-          <div className="grid grid-cols-3 gap-6 mb-8 max-md:grid-cols-1">
-            <Card className="bg-[#151515] border-[#333945] text-white col-span-1">
-              <CardHeader>
-                <CardTitle className="text-xl">Choose Your Advisor</CardTitle>
-                <CardDescription className="text-[#8E9196]">Select an investment legend to guide you</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Select onValueChange={handleAdvisorChange} defaultValue={selectedAdvisor.id}>
-                  <SelectTrigger className="bg-[#000000] border-[#333945] text-white">
-                    <SelectValue placeholder="Select an advisor" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-[#151515] border-[#333945] text-white">
-                    {advisors.map(advisor => (
-                      <SelectItem key={advisor.id} value={advisor.id}>{advisor.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-[#151515] border-[#333945] text-white col-span-2">
+          {/* Since we only have one advisor now, we can remove the advisor selection card */}
+          <div className="grid grid-cols-1 gap-6 mb-8">            
+            <Card className="bg-[#151515] border-[#333945] text-white">
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
                   <CardTitle className="text-xl">{selectedAdvisor.name}</CardTitle>
@@ -172,22 +126,20 @@ export default function AIAdvisor() {
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Ask a Question
                   </Button>
-                  {selectedAdvisor.id === "buffett" && (
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowBuffettPortfolio(!showBuffettPortfolio)}
-                      className="border-[#2751B9] text-white hover:bg-[#1c1c1c]"
-                    >
-                      <DollarSign className="h-4 w-4 mr-2" />
-                      {showBuffettPortfolio ? "Hide" : "Show"} Buffett's Portfolio
-                    </Button>
-                  )}
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowBuffettPortfolio(!showBuffettPortfolio)}
+                    className="border-[#2751B9] text-white hover:bg-[#1c1c1c]"
+                  >
+                    <DollarSign className="h-4 w-4 mr-2" />
+                    {showBuffettPortfolio ? "Hide" : "Show"} Buffett's Portfolio
+                  </Button>
                 </div>
               </CardContent>
             </Card>
           </div>
           
-          {selectedAdvisor.id === "buffett" && showBuffettPortfolio && (
+          {showBuffettPortfolio && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
