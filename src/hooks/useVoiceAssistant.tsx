@@ -21,6 +21,12 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const lastResponseRef = useRef<string>("");
+  
+  // Add references for silence detection
+  const silenceTimeoutRef = useRef<number | null>(null);
+  const lastSpeechTimestampRef = useRef<number>(Date.now());
+  const silenceThresholdMs = 2000; // Stop after 2 seconds of silence
+  const hasDetectedSpeechRef = useRef<boolean>(false);
 
   // Create audio element for playback
   useEffect(() => {
@@ -38,6 +44,11 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
       if (streamRef.current) {
         audioUtils.cleanupMediaStream(streamRef.current);
       }
+
+      // Clear any pending silence timeout
+      if (silenceTimeoutRef.current !== null) {
+        clearTimeout(silenceTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -53,12 +64,31 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
           .join("");
         
         setUserInput(transcript);
+        
+        // User is speaking, update the last speech timestamp
+        lastSpeechTimestampRef.current = Date.now();
+        hasDetectedSpeechRef.current = true;
+        
+        // Reset the silence timeout
+        resetSilenceTimeout();
       };
       
       recognitionRef.current.onerror = (event: any) => {
         console.error("Speech recognition error", event.error);
         setIsListening(false);
         toast.error("Speech recognition error. Please try again.");
+      };
+
+      // Set up onend handler to restart recognition if we're still listening
+      // This helps with continuous listening as some browsers automatically stop after a while
+      recognitionRef.current.onend = () => {
+        if (isListening && recognitionRef.current) {
+          try {
+            recognitionRef.current.start();
+          } catch (error) {
+            console.error("Error restarting speech recognition:", error);
+          }
+        }
       };
     }
     
@@ -70,8 +100,31 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
           console.error("Error stopping recognition:", error);
         }
       }
+
+      // Clear any pending silence timeout
+      if (silenceTimeoutRef.current !== null) {
+        clearTimeout(silenceTimeoutRef.current);
+      }
     };
-  }, []);
+  }, [isListening]);
+
+  // Set up silence detection timeout
+  const resetSilenceTimeout = () => {
+    // Clear any existing timeout
+    if (silenceTimeoutRef.current !== null) {
+      clearTimeout(silenceTimeoutRef.current);
+    }
+    
+    // Only set silence detection if we've detected speech already
+    if (hasDetectedSpeechRef.current && isListening) {
+      silenceTimeoutRef.current = window.setTimeout(() => {
+        console.log("Silence detected for", silenceThresholdMs, "ms. Stopping listening automatically.");
+        if (userInput.trim()) {  // Only stop if we have some input
+          stopListening();
+        }
+      }, silenceThresholdMs);
+    }
+  };
 
   // Function to start listening
   const startListening = async () => {
@@ -81,6 +134,10 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
     }
 
     try {
+      // Reset silence detection state
+      lastSpeechTimestampRef.current = Date.now();
+      hasDetectedSpeechRef.current = false;
+      
       // Request microphone access and start recording
       const { mediaRecorder, stream } = await audioUtils.startRecording();
       
@@ -112,6 +169,12 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
         if (streamRef.current) {
           audioUtils.cleanupMediaStream(streamRef.current);
         }
+
+        // Clear any pending silence timeout
+        if (silenceTimeoutRef.current !== null) {
+          clearTimeout(silenceTimeoutRef.current);
+          silenceTimeoutRef.current = null;
+        }
       };
       
       // Start recognition
@@ -119,6 +182,9 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
       setIsListening(true);
       setUserInput("");
       toast.success("Listening... Ask me about your finances");
+      
+      // Start silence detection
+      resetSilenceTimeout();
     } catch (error) {
       console.error("Error starting listening:", error);
       toast.error("Could not access microphone. Please check permissions.");
@@ -128,6 +194,12 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
   // Function to stop listening and process audio
   const stopListening = async () => {
     if (isListening) {
+      // Clear any pending silence timeout
+      if (silenceTimeoutRef.current !== null) {
+        clearTimeout(silenceTimeoutRef.current);
+        silenceTimeoutRef.current = null;
+      }
+      
       if (recognitionRef.current) {
         recognitionRef.current.stop();
       }
