@@ -2,7 +2,7 @@
 import React from "react";
 import { FinanceCard } from "./FinanceCard";
 import { useNavigate } from "react-router-dom";
-import { Brain, BookOpen, Calendar, Clock, History } from "lucide-react";
+import { Brain, BookOpen, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
 
 export function FinanceCards() {
@@ -94,8 +94,6 @@ export function FinanceCards() {
   const narrativeIcon = <BookOpen className="w-[50px] h-[50px] text-white" />;
   
   const journeyIcon = <Calendar className="w-[50px] h-[50px] text-white" />;
-  
-  const timeTravelIcon = <History className="w-[50px] h-[50px] text-white" />;
 
   // Card animation variants
   const containerVariants = {
@@ -122,14 +120,14 @@ export function FinanceCards() {
   };
 
   return (
-    <div className="w-full">
+    <div className="absolute top-[650px] left-1/2 transform -translate-x-1/2 z-10 w-full max-w-6xl">
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="show" 
-        className="flex flex-wrap justify-center items-center"
+        className="flex flex-wrap justify-center items-center gap-8"
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 w-full">
+        <div className="grid grid-cols-4 max-lg:grid-cols-2 max-sm:grid-cols-1 gap-8">
           {/* Standard cards */}
           <motion.div variants={itemVariants}>
             <FinanceCard
@@ -194,16 +192,6 @@ export function FinanceCards() {
               description="Visualize your daily financial life"
               icon={journeyIcon}
               onClick={() => handleCardClick('/finance-journey')}
-              variant="premium"
-            />
-          </motion.div>
-          
-          <motion.div variants={itemVariants}>
-            <FinanceCard
-              title="Time Travel"
-              description="Explore alternate investment realities"
-              icon={timeTravelIcon}
-              onClick={() => handleCardClick('/time-travel')}
               variant="premium"
             />
           </motion.div>
