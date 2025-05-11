@@ -23,21 +23,25 @@ export function usePythonBackend() {
     };
     
     checkBackendConnection();
+    
+    // Set up periodic connection check
+    const checkInterval = setInterval(checkBackendConnection, 30000); // Check every 30 seconds
+    
+    return () => clearInterval(checkInterval);
   }, []);
 
-  // Example query to get data from Python backend
+  // Query to get data from Python backend
   const { data: financialData, isLoading, error } = useQuery({
     queryKey: ['financialData'],
     queryFn: () => pythonBackendService.getFinancialData(),
-    // Don't auto-fetch on mount - uncomment if you want to fetch on component mount
-    enabled: false,
+    enabled: connectionStatus === 'connected',
   });
 
-  // Example mutation to send data to Python backend
+  // Mutation to send data to Python backend for chart generation
   const { mutate: processInput, isPending: isProcessing } = useMutation({
-    mutationFn: (input: string) => pythonBackendService.processUserInput(input),
+    mutationFn: (input: string) => pythonBackendService.getChartData(input),
     onSuccess: (data) => {
-      console.log('Processed data:', data);
+      console.log('Chart data generated:', data);
       // Handle successful processing here
     },
   });

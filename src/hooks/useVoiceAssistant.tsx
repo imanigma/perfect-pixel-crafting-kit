@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { toast } from '@/components/ui/sonner';
-import { voiceAssistantService } from '@/services/voiceAssistantService';
+import { pythonBackendService } from '@/services/pythonBackendService';
 
 interface VoiceAssistantMessage {
   role: 'user' | 'assistant' | 'system';
@@ -26,10 +26,24 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Create audio element for playback
+  useEffect(() => {
+    audioRef.current = new Audio();
+    audioRef.current.onplay = () => setIsSpeaking(true);
+    audioRef.current.onended = () => setIsSpeaking(false);
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
 
   // Setup SpeechRecognition
   useEffect(() => {
-    // We define a window-level type declaration to help TypeScript
     if (typeof window !== 'undefined') {
       const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
       
@@ -148,37 +162,46 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
       // Get the current page context - in a real app, this would be more dynamic
       const pageContext = document.title + " - " + window.location.pathname;
       
-      // Process with our service
-      await voiceAssistantService.processVoiceInput(
-        audioBlob, 
-        pageContext, 
-        !!options.genZMode
-      );
-      
-      // Simulate AI response - in a real implementation, this would come from the API
-      setTimeout(() => {
-        const mockResponses = [
-          "Your portfolio has grown by 3.2% in the last month. Your tech investments performed particularly well with a 5.7% gain.",
-          "Based on your transaction history, you've been averaging about $1,700 per stock purchase. Your bank balance is currently $4,947.25.",
-          "I've analyzed your investment pattern. You seem to favor tech stocks, which make up about 65% of your portfolio.",
-          "Current market trends show technology and renewable energy sectors outperforming the general market. Your portfolio is well-positioned."
-        ];
+      try {
+        // Process with our Python backend service
+        const responseBlob = await pythonBackendService.processVoiceInput(
+          audioBlob, 
+          pageContext, 
+          !!options.genZMode
+        );
         
-        const response = mockResponses[Math.floor(Math.random() * mockResponses.length)];
+        // Create a URL for the audio blob
+        const audioUrl = URL.createObjectURL(responseBlob);
         
-        // Add AI response to conversation
-        setMessages(prev => [...prev, { role: "assistant", content: response }]);
-        setIsSpeaking(true);
+        // Play the audio response
+        if (audioRef.current) {
+          audioRef.current.src = audioUrl;
+          audioRef.current.play();
+          setIsSpeaking(true);
+        }
         
-        // Simulate speaking ending
+        // Since we don't have access to the text response from the audio,
+        // we'll add a placeholder response for now
         setTimeout(() => {
-          setIsSpeaking(false);
+          // Add AI response to conversation (this would ideally come from the server)
+          setMessages(prev => [...prev, { 
+            role: "assistant", 
+            content: "I've processed your request about " + inputText.substring(0, 30) + "..." 
+          }]);
+          
           setIsProcessing(false);
           if (options.onProcessEnd) {
             options.onProcessEnd();
           }
-        }, 3000);
-      }, 1000);
+        }, 500);
+      } catch (error) {
+        console.error("Error processing with Python backend:", error);
+        toast.error("Error processing your request. Please try again.");
+        setIsProcessing(false);
+        if (options.onProcessEnd) {
+          options.onProcessEnd();
+        }
+      }
     } catch (error) {
       console.error("Error processing audio:", error);
       setIsProcessing(false);
@@ -195,7 +218,6 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
     
     // Add user message to conversation
     setMessages(prev => [...prev, { role: "user", content: text }]);
-    setUserInput("");
     
     try {
       setIsProcessing(true);
@@ -209,37 +231,48 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
       // Create an empty audio blob for consistency with voice API
       const emptyAudioBlob = new Blob([], { type: 'audio/webm' });
       
-      // Process with our service (this is simplified; in a real app we might have a separate text endpoint)
-      await voiceAssistantService.processVoiceInput(
-        emptyAudioBlob, 
-        pageContext, 
-        !!options.genZMode
-      );
-      
-      // Simulate AI response
-      setTimeout(() => {
-        const mockResponses = [
-          "Based on your question, I can see that your portfolio has a good balance of growth and value stocks. Your asset allocation is 60% stocks, 30% bonds, and 10% cash.",
-          "Looking at your transaction history, your most active trading period was last quarter when you made 15 trades, primarily in technology stocks.",
-          "Your investment strategy appears to favor blue-chip companies with strong dividends. This is a relatively conservative approach that should provide steady returns.",
-          "I notice you have limited exposure to international markets in your portfolio. Diversifying geographically might help reduce overall risk."
-        ];
+      try {
+        // Process with our Python backend service
+        const responseBlob = await pythonBackendService.processVoiceInput(
+          emptyAudioBlob, 
+          pageContext, 
+          !!options.genZMode
+        );
         
-        const response = mockResponses[Math.floor(Math.random() * mockResponses.length)];
+        // Create a URL for the audio blob
+        const audioUrl = URL.createObjectURL(responseBlob);
         
-        // Add AI response to conversation
-        setMessages(prev => [...prev, { role: "assistant", content: response }]);
-        setIsSpeaking(true);
+        // Play the audio response
+        if (audioRef.current) {
+          audioRef.current.src = audioUrl;
+          audioRef.current.play();
+          setIsSpeaking(true);
+        }
         
-        // Simulate speaking ending
+        // Since we don't have access to the text response from the audio,
+        // we'll add a placeholder response for now
         setTimeout(() => {
-          setIsSpeaking(false);
+          // Add AI response to conversation (this would ideally come from the server)
+          setMessages(prev => [...prev, { 
+            role: "assistant", 
+            content: "I've processed your text request." 
+          }]);
+          
+          setUserInput("");
           setIsProcessing(false);
           if (options.onProcessEnd) {
             options.onProcessEnd();
           }
-        }, 3000);
-      }, 1000);
+        }, 500);
+      } catch (error) {
+        console.error("Error processing with Python backend:", error);
+        toast.error("Error processing your request. Please try again.");
+        setUserInput("");
+        setIsProcessing(false);
+        if (options.onProcessEnd) {
+          options.onProcessEnd();
+        }
+      }
     } catch (error) {
       console.error("Error processing text input:", error);
       setIsProcessing(false);

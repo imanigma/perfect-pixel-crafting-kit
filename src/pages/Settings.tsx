@@ -1,4 +1,3 @@
-
 import React from "react";
 import { DashboardLayout } from "@/components/dashboard";
 import { usePythonBackend } from "@/hooks/usePythonBackend";
@@ -22,7 +21,7 @@ const Settings = () => {
     if (isConnected) {
       toast.success("Connection to Python backend successful!");
     } else {
-      toast.error("Failed to connect to Python backend!");
+      toast.error("Failed to connect to Python backend! Make sure your Python server is running on port 8078.");
     }
   };
 
@@ -63,6 +62,18 @@ const Settings = () => {
             {connectionStatus === 'checking' && <Loader2 className="h-4 w-4 animate-spin text-white" />}
           </div>
           
+          <div className="space-y-4 mb-6">
+            <p className="text-sm text-[#8E9196]">
+              Make sure your Python Flask server is running at <span className="font-mono bg-black/30 px-2 py-1 rounded">localhost:8078</span>. 
+              The voice assistant requires this backend to be active.
+            </p>
+            
+            <p className="text-sm text-[#8E9196]">
+              Set the environment variable <span className="font-mono bg-black/30 px-2 py-1 rounded">VITE_PYTHON_BACKEND_URL</span> to
+              your Python server URL (default: http://localhost:8078).
+            </p>
+          </div>
+          
           <button 
             onClick={handleTestConnection}
             className="px-4 py-2 bg-[#2751B9] text-white rounded hover:bg-[#3962c8] transition-colors"
@@ -71,18 +82,44 @@ const Settings = () => {
           </button>
         </div>
         
+        {/* Voice Assistant settings */}
+        <div className="bg-[#151515]/80 border border-[#333333] rounded-xl p-6 shadow-lg mb-8">
+          <h2 className="text-xl font-semibold text-white mb-4">Voice Assistant Settings</h2>
+          
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-[#8E9196]">Gen Z Mode</span>
+              <div className="w-10 h-5 bg-[#222222] rounded-full relative">
+                <div className="absolute w-4 h-4 bg-white rounded-full top-0.5 left-0.5 transform transition-transform"></div>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm text-[#8E9196]">Voice Speed</label>
+              <input 
+                type="range" 
+                min="0.5" 
+                max="2" 
+                step="0.1" 
+                defaultValue="1" 
+                className="w-full bg-[#1A1F2C] rounded-md" 
+              />
+            </div>
+          </div>
+        </div>
+        
         {/* Example of sending data to Python backend */}
-        <div className="bg-[#151515]/80 border border-[#333333] rounded-xl p-6 shadow-lg">
+        <div className="bg-[#151515]/80 border border-[#333333] rounded-xl p-6 shadow-lg mb-8">
           <h2 className="text-xl font-semibold text-white mb-4">Python Backend Example</h2>
           
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm text-[#8E9196]">Send data to Python backend</label>
+              <label className="text-sm text-[#8E9196]">Generate chart with Python</label>
               <input 
                 type="text" 
                 value={inputData}
                 onChange={(e) => setInputData(e.target.value)}
-                placeholder="Enter data to process"
+                placeholder="Enter chart description"
                 className="w-full bg-[#1A1F2C] border border-[#2B2E3D] rounded-md px-4 py-2 text-white"
               />
             </div>
@@ -96,7 +133,7 @@ const Settings = () => {
                   : 'hover:bg-[#3962c8]'
               }`}
             >
-              {isProcessing ? 'Processing...' : 'Process with Python'}
+              {isProcessing ? 'Processing...' : 'Generate Chart'}
             </button>
           </div>
         </div>
