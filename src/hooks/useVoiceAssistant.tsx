@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { toast } from '@/components/ui/sonner';
 import { VoiceAssistantMessage, UseVoiceAssistantOptions } from '@/features/voice/types';
@@ -25,7 +24,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
   // Add references for silence detection
   const silenceTimeoutRef = useRef<number | null>(null);
   const lastSpeechTimestampRef = useRef<number>(Date.now());
-  const silenceThresholdMs = 2000; // Stop after 2 seconds of silence
+  const silenceThresholdMs = 3000; // Stop after 3 seconds of silence (changed from 2000)
   const hasDetectedSpeechRef = useRef<boolean>(false);
 
   // Create audio element for playback
