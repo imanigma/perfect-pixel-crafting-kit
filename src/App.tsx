@@ -10,6 +10,7 @@ import Stocks from "./pages/Stocks";
 import AIAdvisor from "./pages/AIAdvisor";
 import FinancialNarrative from "./pages/FinancialNarrative";
 import FinanceJourney from "./pages/FinanceJourney";
+import { VoiceAssistant } from "./components/VoiceAssistant";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,9 @@ const App = () => (
           <Route path="/ai-advisor" element={<AIAdvisor />} />
           <Route path="/financial-narrative" element={<FinancialNarrative />} />
           <Route path="/finance-journey" element={<FinanceJourney />} />
+          <Route path="/etfs" element={<NotFound />} />
+          <Route path="/crypto" element={<NotFound />} />
+          <Route path="/savings" element={<NotFound />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

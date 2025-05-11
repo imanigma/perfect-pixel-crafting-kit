@@ -88,16 +88,17 @@ export function FinanceCards() {
     </svg>
   );
 
-  const aiAdvisorIcon = <Brain className="w-[50px] h-[50px] text-[#2751B9]" />;
+  const aiAdvisorIcon = <Brain className="w-[50px] h-[50px] text-[#3962c8]" />;
   
-  const narrativeIcon = <BookOpen className="w-[50px] h-[50px] text-[#2751B9]" />;
+  const narrativeIcon = <BookOpen className="w-[50px] h-[50px] text-[#3962c8]" />;
   
-  const journeyIcon = <Calendar className="w-[50px] h-[50px] text-[#2751B9]" />;
+  const journeyIcon = <Calendar className="w-[50px] h-[50px] text-[#3962c8]" />;
 
   return (
     <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full max-w-6xl">
       <div className="flex flex-wrap justify-center items-center gap-8">
         <div className="grid grid-cols-4 max-lg:grid-cols-2 max-sm:grid-cols-1 gap-8">
+          {/* Standard cards */}
           <FinanceCard
             title="Stocks"
             description="Commission-free trading"
@@ -122,23 +123,28 @@ export function FinanceCards() {
             icon={savingsIcon}
             onClick={() => handleCardClick('/savings')}
           />
+          
+          {/* Premium AI cards with special styling */}
           <FinanceCard
             title="AI Advisor"
             description="Investment strategies from legendary investors"
             icon={aiAdvisorIcon}
             onClick={() => handleCardClick('/ai-advisor')}
+            variant="premium"
           />
           <FinanceCard
             title="Financial Story"
             description="Your finances as engaging narratives"
             icon={narrativeIcon}
             onClick={() => handleCardClick('/financial-narrative')}
+            variant="premium"
           />
           <FinanceCard
             title="Finance Journey"
             description="Visualize your daily financial life"
             icon={journeyIcon}
             onClick={() => handleCardClick('/finance-journey')}
+            variant="premium"
           />
         </div>
       </div>
