@@ -46,7 +46,7 @@ export function Sidebar() {
               to="/" 
               className={`flex items-center px-4 py-3 rounded-lg transition-all ${
                 isActive('/') 
-                  ? 'bg-[#3F51B5] text-white' 
+                  ? 'bg-[#19173C] text-white' 
                   : 'text-[#8E9196] hover:bg-[#1A1F2C]/40 hover:text-white'
               }`}
             >
@@ -58,7 +58,7 @@ export function Sidebar() {
               to="/dashboard" 
               className={`flex items-center px-4 py-3 rounded-lg transition-all ${
                 isActive('/dashboard') 
-                  ? 'bg-[#3F51B5] text-white' 
+                  ? 'bg-[#19173C] text-white' 
                   : 'text-[#8E9196] hover:bg-[#1A1F2C]/40 hover:text-white'
               }`}
             >
@@ -70,7 +70,7 @@ export function Sidebar() {
               to="/stocks" 
               className={`flex items-center px-4 py-3 rounded-lg transition-all ${
                 isActive('/stocks') 
-                  ? 'bg-[#3F51B5] text-white' 
+                  ? 'bg-[#19173C] text-white' 
                   : 'text-[#8E9196] hover:bg-[#1A1F2C]/40 hover:text-white'
               }`}
             >
@@ -82,7 +82,7 @@ export function Sidebar() {
               to="/ai-advisor" 
               className={`flex items-center px-4 py-3 rounded-lg transition-all ${
                 isActive('/ai-advisor') 
-                  ? 'bg-[#3F51B5] text-white' 
+                  ? 'bg-[#19173C] text-white' 
                   : 'text-[#8E9196] hover:bg-[#1A1F2C]/40 hover:text-white'
               }`}
             >
@@ -94,7 +94,7 @@ export function Sidebar() {
               to="/financial-narrative" 
               className={`flex items-center px-4 py-3 rounded-lg transition-all ${
                 isActive('/financial-narrative') 
-                  ? 'bg-[#3F51B5] text-white' 
+                  ? 'bg-[#19173C] text-white' 
                   : 'text-[#8E9196] hover:bg-[#1A1F2C]/40 hover:text-white'
               }`}
             >
@@ -106,7 +106,7 @@ export function Sidebar() {
               to="/finance-journey" 
               className={`flex items-center px-4 py-3 rounded-lg transition-all ${
                 isActive('/finance-journey') 
-                  ? 'bg-[#3F51B5] text-white' 
+                  ? 'bg-[#19173C] text-white' 
                   : 'text-[#8E9196] hover:bg-[#1A1F2C]/40 hover:text-white'
               }`}
             >
@@ -118,7 +118,7 @@ export function Sidebar() {
               to="/accounts" 
               className={`flex items-center px-4 py-3 rounded-lg transition-all ${
                 isActive('/accounts') 
-                  ? 'bg-[#3F51B5] text-white' 
+                  ? 'bg-[#19173C] text-white' 
                   : 'text-[#8E9196] hover:bg-[#1A1F2C]/40 hover:text-white'
               }`}
             >

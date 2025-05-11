@@ -16,7 +16,7 @@ export function VoiceAssistant() {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   
   // SpeechRecognition setup
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
   const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
