@@ -2,7 +2,7 @@
 import React from "react";
 import { FinanceCard } from "./FinanceCard";
 import { useNavigate } from "react-router-dom";
-import { Brain, BookOpen, Calendar } from "lucide-react";
+import { Brain, BookOpen, Calendar, Clock, History } from "lucide-react";
 import { motion } from "framer-motion";
 
 export function FinanceCards() {
@@ -94,6 +94,8 @@ export function FinanceCards() {
   const narrativeIcon = <BookOpen className="w-[50px] h-[50px] text-white" />;
   
   const journeyIcon = <Calendar className="w-[50px] h-[50px] text-white" />;
+  
+  const timeTravelIcon = <History className="w-[50px] h-[50px] text-white" />;
 
   // Card animation variants
   const containerVariants = {
@@ -192,6 +194,16 @@ export function FinanceCards() {
               description="Visualize your daily financial life"
               icon={journeyIcon}
               onClick={() => handleCardClick('/finance-journey')}
+              variant="premium"
+            />
+          </motion.div>
+          
+          <motion.div variants={itemVariants}>
+            <FinanceCard
+              title="Time Travel"
+              description="Explore alternate investment realities"
+              icon={timeTravelIcon}
+              onClick={() => handleCardClick('/time-travel')}
               variant="premium"
             />
           </motion.div>

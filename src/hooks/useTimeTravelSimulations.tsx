@@ -7,6 +7,11 @@ import { toast } from "@/components/ui/sonner";
 export function useTimetravelSimulations() {
   const [isLoading, setIsLoading] = useState(false);
   const [simulation, setSimulation] = useState<SimulationResult | null>(null);
+  const [multipleSimulations, setMultipleSimulations] = useState<{
+    conservative: SimulationResult | null;
+    moderate: SimulationResult | null;
+    aggressive: SimulationResult | null;
+  } | null>(null);
 
   const runSimulation = async (scenarioId: string) => {
     setIsLoading(true);
@@ -24,9 +29,41 @@ export function useTimetravelSimulations() {
     }
   };
 
+  const runMultipleSimulations = async (baseScenarioId: string) => {
+    setIsLoading(true);
+    try {
+      // Generate multiple simulations with different risk profiles
+      const conservativePromise = timeTravel.simulateScenario(`${baseScenarioId}-conservative`);
+      const moderatePromise = timeTravel.simulateScenario(baseScenarioId);
+      const aggressivePromise = timeTravel.simulateScenario(`${baseScenarioId}-aggressive`);
+      
+      const [conservative, moderate, aggressive] = await Promise.all([
+        conservativePromise.catch(() => timeTravel.generateRiskBasedSimulation(baseScenarioId, 'conservative')),
+        moderatePromise,
+        aggressivePromise.catch(() => timeTravel.generateRiskBasedSimulation(baseScenarioId, 'aggressive'))
+      ]);
+      
+      setMultipleSimulations({
+        conservative,
+        moderate,
+        aggressive
+      });
+      
+      toast.success("Multiple simulations completed");
+    } catch (error) {
+      console.error("Error running multiple simulations:", error);
+      toast.error("Failed to generate alternate realities. Please try again.");
+      setMultipleSimulations(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     isLoading,
     simulation,
-    runSimulation
+    multipleSimulations,
+    runSimulation,
+    runMultipleSimulations
   };
 }
