@@ -91,11 +91,6 @@
 
   body {
     @apply bg-background text-foreground font-poppins;
-    overflow-x: hidden;
-  }
-
-  html {
-    scroll-behavior: smooth;
   }
 }
 
@@ -168,16 +163,6 @@
   }
 }
 
-/* Additional animations for globe */
-@keyframes orbit {
-  from {
-    transform: rotate(0deg) translateX(100px) rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg) translateX(100px) rotate(-360deg);
-  }
-}
-
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
@@ -200,10 +185,6 @@
 
 .animate-reverse-spin {
   animation: reverse-spin 45s linear infinite;
-}
-
-.animate-orbit {
-  animation: orbit 20s linear infinite;
 }
 
 .card-hover {
