@@ -18,7 +18,7 @@ pythonApi.interceptors.response.use(
   (error) => {
     if (error.code === 'ERR_NETWORK') {
       console.error('Network error when connecting to Python backend:', error);
-      const message = 'Failed to connect to Python backend. Is your server running?';
+      const message = 'Failed to connect to Python backend. Make sure your server is running at http://localhost:8078';
       toast.error(message);
     } else {
       const message = error.response?.data?.message || 'Failed to connect to Python backend';
@@ -89,6 +89,12 @@ export const pythonBackendService = {
    */
   async processVoiceInput(formData: FormData, pageContext: string, genZMode: boolean = false): Promise<Blob> {
     try {
+      console.log('Sending to backend:', {
+        textInput: formData.get('text_input'),
+        pageContext,
+        genZMode
+      });
+      
       const response = await axios.post(`${pythonApi.defaults.baseURL}/voice`, formData, {
         responseType: 'blob',
         headers: {
@@ -101,7 +107,7 @@ export const pythonBackendService = {
       console.error('Failed to process voice input:', error);
       
       if (error.code === 'ERR_NETWORK') {
-        toast.error('Failed to connect to Python backend. Is your server running?');
+        toast.error('Failed to connect to Python backend. Make sure your server is running at http://localhost:8078');
       } else {
         toast.error('Failed to process voice input. Check server connection.');
       }

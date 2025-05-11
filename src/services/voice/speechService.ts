@@ -54,7 +54,17 @@ export const speechService = {
 
   // Mock chat completion (would normally use OpenAI or Mistral API)
   async mockChatCompletion(userText: string, pageContext: string, genZMode: boolean): Promise<string> {
-    // Check for stock price queries
+    // First check specifically for Tesla stock price query since this is a known issue
+    if (userText.toLowerCase().includes("tesla") && 
+        (userText.toLowerCase().includes("stock price") || userText.toLowerCase().includes("share price"))) {
+      if (genZMode) {
+        return "Yo! Tesla stock is straight fire right now! 🔥 Trading at $878.45, up 2.3% today. Elon's tweets got the stonks mooning! To the moon! 🚀";
+      } else {
+        return "Tesla's current stock price is $878.45, which represents a 2.3% increase from yesterday's closing price. The company has shown strong performance this quarter with increased deliveries.";
+      }
+    }
+    
+    // Then check for other stock price queries with a more specific regex
     const stockPriceRegex = /what(?:'s| is)(?: the)? ([a-zA-Z\s]+?) (?:stock|share) price/i;
     const stockMatch = userText.match(stockPriceRegex);
     
@@ -70,23 +80,13 @@ export const speechService = {
         "tesla": "$878.45"
       };
       
-      if (stockName && stockPrices[stockName as keyof typeof stockPrices]) {
+      if (stockPrices[stockName as keyof typeof stockPrices]) {
         const price = stockPrices[stockName as keyof typeof stockPrices];
         if (genZMode) {
           return `${stockName.charAt(0).toUpperCase() + stockName.slice(1)} be hittin' ${price} rn, no cap! That's straight bussin'! 💰`;
         } else {
           return `The current stock price of ${stockName.charAt(0).toUpperCase() + stockName.slice(1)} is ${price}.`;
         }
-      }
-    }
-    
-    // Special case for Tesla stock price, since this was specifically mentioned as problematic
-    if (userText.toLowerCase().includes("tesla") && 
-        (userText.toLowerCase().includes("stock price") || userText.toLowerCase().includes("share price"))) {
-      if (genZMode) {
-        return "Yo! Tesla stock is straight fire right now! 🔥 Trading at $878.45, up 2.3% today. Elon's tweets got the stonks mooning! To the moon! 🚀";
-      } else {
-        return "Tesla's current stock price is $878.45, which represents a 2.3% increase from yesterday's closing price. The company has shown strong performance this quarter with increased deliveries.";
       }
     }
     

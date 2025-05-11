@@ -20,6 +20,43 @@ export const voiceProcessingService = {
       throw new Error("No input text to process");
     }
     
+    // First check specifically for Tesla stock price query
+    if (inputText.toLowerCase().includes("tesla") && 
+        (inputText.toLowerCase().includes("stock price") || inputText.toLowerCase().includes("share price"))) {
+      
+      try {
+        // Process with Python backend service
+        // Pass the inputText to the backend so it can be used if transcription fails
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'recording.webm');
+        formData.append('page_text', pageContext);
+        formData.append('text_input', inputText); // Add the text input
+        formData.append('gen_z_mode', genZMode ? 'unhinged' : 'normal');
+        
+        return await pythonBackendService.processVoiceInput(
+          formData,
+          pageContext, 
+          genZMode
+        );
+      } catch (error) {
+        console.error("Error processing with Python backend:", error);
+        
+        // Fallback to our mock implementation if backend is unavailable
+        const responseText = await speechService.mockChatCompletion(inputText, pageContext, genZMode);
+        
+        // Create a synthetic response blob
+        // This would normally come from the backend TTS service
+        const mimeType = 'audio/mp3'; 
+        const blob = new Blob([new Uint8Array(0)], { type: mimeType });
+        
+        // Use browser's speech synthesis as fallback
+        speechService.speakResponse(responseText);
+        
+        toast.warning("Using local speech synthesis due to backend connection issues.");
+        return blob;
+      }
+    } 
+    
     try {
       // Process with Python backend service
       // Pass the inputText to the backend so it can be used if transcription fails
@@ -48,7 +85,7 @@ export const voiceProcessingService = {
       // Use browser's speech synthesis as fallback
       speechService.speakResponse(responseText);
       
-      toast.error("Using local speech synthesis due to backend connection issues.");
+      toast.warning("Using local speech synthesis due to backend connection issues.");
       return blob;
     }
   },
