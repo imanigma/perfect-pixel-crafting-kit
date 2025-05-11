@@ -8,43 +8,28 @@ export interface StockPortfolio {
   percentage: number;
 }
 
-// Function to scrape Warren Buffett's portfolio from the CNBC page
+// Mock data for Warren Buffett's portfolio
+const mockBuffettPortfolio: StockPortfolio[] = [
+  { stock: "Apple Inc.", symbol: "AAPL", percentage: 37.5 },
+  { stock: "Bank of America", symbol: "BAC", percentage: 10.9 },
+  { stock: "American Express", symbol: "AXP", percentage: 7.6 },
+  { stock: "Coca-Cola", symbol: "KO", percentage: 7.2 },
+  { stock: "Chevron", symbol: "CVX", percentage: 5.8 },
+  { stock: "Occidental Petroleum", symbol: "OXY", percentage: 4.3 },
+  { stock: "Kraft Heinz", symbol: "KHC", percentage: 3.7 },
+  { stock: "Moody's Corporation", symbol: "MCO", percentage: 2.4 },
+  { stock: "Capital One Financial", symbol: "COF", percentage: 1.9 },
+  { stock: "Visa Inc.", symbol: "V", percentage: 1.4 }
+];
+
+// Function to get Warren Buffett's portfolio (using mock data)
 export async function getWarrenBuffettPortfolio(): Promise<StockPortfolio[]> {
-  const url = 'https://www.cnbc.com/berkshire-hathaway-portfolio/';
-
-  try {
-    // Fetch the HTML content of the page
-    const { data } = await axios.get(url);
-
-    // Load the HTML into cheerio
-    const $ = cheerio.load(data);
-
-    // Array to hold the portfolio data
-    const portfolio: StockPortfolio[] = [];
-
-    // Assuming the portfolio items are within <div class="table__row"> elements
-    $('.table__row').each((index, element) => {
-      const stock = $(element).find('.symbol').text().trim();
-      const percentageStr = $(element).find('.percent').text().trim();
-
-      // Extract the percentage and convert it to a number
-      const percentage = parseFloat(percentageStr.replace('%', '').trim());
-
-      // Only add valid entries to the portfolio array
-      if (stock && !isNaN(percentage)) {
-        portfolio.push({
-          stock,
-          symbol: stock, // Using the stock name as the symbol
-          percentage,
-        });
-      }
-    });
-
-    return portfolio;
-  } catch (error) {
-    console.error('Error fetching portfolio data:', error);
-    return [];
-  }
+  // For demonstration purposes, we're adding a small delay to simulate a network request
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(mockBuffettPortfolio);
+    }, 800);
+  });
 }
 
 // Function to calculate investment based on portfolio data
