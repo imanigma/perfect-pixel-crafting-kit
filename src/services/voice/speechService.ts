@@ -54,6 +54,29 @@ export const speechService = {
 
   // Mock chat completion (would normally use OpenAI or Mistral API)
   async mockChatCompletion(userText: string, pageContext: string, genZMode: boolean): Promise<string> {
+    // Check if the user is asking for help
+    const helpRegex = /^help|what (?:can|could) (?:you|i) (?:do|say|ask)|what (?:are|'re) (?:the|your) (?:commands|features)|how (?:do|can) i use (?:this|you)|(?:show|tell) me (?:the|your) (?:commands|options)/i;
+    
+    if (helpRegex.test(userText.toLowerCase())) {
+      const commands = [
+        "• Ask about stock prices (e.g., 'What's the Tesla stock price?')",
+        "• Check your portfolio performance",
+        "• View recent transactions",
+        "• Get stock recommendations",
+        "• Check market trends",
+        "• Get financial advice",
+        "• Ask about specific companies",
+        "• Compare different stocks",
+        "• Check account balance"
+      ];
+      
+      if (genZMode) {
+        return "Yo! Here's what I can do for you: 💯\n\n" + commands.join("\n") + "\n\nJust hit me up with any of these, and I'll hook you up with the deets! No cap!";
+      } else {
+        return "Here are some commands you can try:\n\n" + commands.join("\n") + "\n\nFeel free to ask me about any of these topics, and I'll assist you with your financial queries.";
+      }
+    }
+    
     // First check specifically for Tesla stock price query since this is a known issue
     if (userText.toLowerCase().includes("tesla") && 
         (userText.toLowerCase().includes("stock price") || userText.toLowerCase().includes("share price"))) {
