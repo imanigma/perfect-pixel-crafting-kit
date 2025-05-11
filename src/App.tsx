@@ -10,6 +10,8 @@ import Stocks from "./pages/Stocks";
 import AIAdvisor from "./pages/AIAdvisor";
 import FinancialNarrative from "./pages/FinancialNarrative";
 import FinanceJourney from "./pages/FinanceJourney";
+import Dashboard from "./pages/Dashboard";
+import Settings from "./pages/Settings";
 import { VoiceAssistantButton } from "./components/VoiceAssistantButton";
 
 const queryClient = new QueryClient();
@@ -24,10 +26,15 @@ const App = () => (
         <VoiceAssistantButton />
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/stocks" element={<Stocks />} />
           <Route path="/ai-advisor" element={<AIAdvisor />} />
           <Route path="/financial-narrative" element={<FinancialNarrative />} />
           <Route path="/finance-journey" element={<FinanceJourney />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/security" element={<NotFound />} />
+          <Route path="/help" element={<NotFound />} />
+          <Route path="/accounts" element={<NotFound />} />
           <Route path="/etfs" element={<NotFound />} />
           <Route path="/crypto" element={<NotFound />} />
           <Route path="/savings" element={<NotFound />} />
