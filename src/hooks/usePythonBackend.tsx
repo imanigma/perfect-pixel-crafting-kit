@@ -18,7 +18,7 @@ export function usePythonBackend() {
   });
 
   // Example mutation to send data to Python backend
-  const { mutate: processInput, isLoading: isProcessing } = useMutation({
+  const { mutate: processInput, isPending: isProcessing } = useMutation({
     mutationFn: (input: string) => pythonBackendService.processUserInput(input),
     onSuccess: (data) => {
       console.log('Processed data:', data);
