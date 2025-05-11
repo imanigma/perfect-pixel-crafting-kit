@@ -122,14 +122,14 @@ export function FinanceCards() {
   };
 
   return (
-    <div className="absolute top-[650px] left-1/2 transform -translate-x-1/2 z-10 w-full max-w-6xl">
+    <div className="w-full">
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="show" 
-        className="flex flex-wrap justify-center items-center gap-8"
+        className="flex flex-wrap justify-center items-center"
       >
-        <div className="grid grid-cols-4 max-lg:grid-cols-2 max-sm:grid-cols-1 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 w-full">
           {/* Standard cards */}
           <motion.div variants={itemVariants}>
             <FinanceCard

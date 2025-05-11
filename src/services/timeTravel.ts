@@ -1,4 +1,3 @@
-
 import { SimulationResult } from "@/types/timeTravel";
 import { predefinedScenarios, mockSimulationResults } from "@/data/timeTravel";
 
@@ -195,7 +194,7 @@ function generateMockResultForScenario(
   } else {
     insights.push({
       type: 'positive',
-      text: finalMultiplier > 1 ? 
+      text: baseMultiplier > 1 ? 
         `Your investment would have outperformed the market by ${Math.round((baseMultiplier - 1) * 100)}%` : 
         "While this investment didn't perform well, it's a valuable learning opportunity"
     });

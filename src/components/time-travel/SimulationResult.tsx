@@ -47,7 +47,7 @@ export function SimulationResult({ simulation, isLoading }: SimulationResultProp
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-3">
         <StatsCard 
           title="Initial Investment" 
           value={simulation.initialInvestment} 
@@ -69,39 +69,43 @@ export function SimulationResult({ simulation, isLoading }: SimulationResultProp
         />
       </div>
 
-      <Card className="border-border/40 p-6">
-        <h3 className="font-medium mb-4">Portfolio Growth Over Time</h3>
-        <div className="h-[300px] w-full">
-          <ChartContainer config={chartConfig}>
-            <LineChart data={simulation.chartData}>
-              <XAxis dataKey="date" tickLine={false} axisLine={false} />
-              <YAxis tickLine={false} axisLine={false} tickFormatter={(value) => `$${(value / 1000)}k`} />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <Line 
-                type="monotone" 
-                dataKey="simulatedValue" 
-                name="simulatedValue" 
-                stroke="var(--color-simulatedValue)" 
-                strokeWidth={2} 
-                dot={false}
-              />
-              <Line 
-                type="monotone" 
-                dataKey="marketValue" 
-                name="marketValue" 
-                stroke="var(--color-marketValue)" 
-                strokeWidth={2} 
-                dot={false} 
-                strokeDasharray="5 5"
-              />
-            </LineChart>
-            <ChartLegend content={<ChartLegendContent />} />
-          </ChartContainer>
-        </div>
+      <Card className="border-border/40">
+        <CardContent className="p-4 sm:p-6">
+          <h3 className="font-medium mb-4">Portfolio Growth Over Time</h3>
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <ChartContainer config={chartConfig}>
+                <LineChart data={simulation.chartData}>
+                  <XAxis dataKey="date" tickLine={false} axisLine={false} />
+                  <YAxis tickLine={false} axisLine={false} tickFormatter={(value) => `$${(value / 1000)}k`} />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Line 
+                    type="monotone" 
+                    dataKey="simulatedValue" 
+                    name="simulatedValue" 
+                    stroke="var(--color-simulatedValue)" 
+                    strokeWidth={2} 
+                    dot={false}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="marketValue" 
+                    name="marketValue" 
+                    stroke="var(--color-marketValue)" 
+                    strokeWidth={2} 
+                    dot={false} 
+                    strokeDasharray="5 5"
+                  />
+                </LineChart>
+                <ChartLegend content={<ChartLegendContent />} />
+              </ChartContainer>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
       </Card>
 
       <Card className="border-border/40">
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           <h3 className="font-medium mb-4">Key Insights</h3>
           <div className="space-y-4">
             {simulation.insights.map((insight, index) => (
@@ -117,30 +121,32 @@ export function SimulationResult({ simulation, isLoading }: SimulationResultProp
       </Card>
 
       <Card className="border-border/40">
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           <h3 className="font-medium mb-4">Transaction Timeline</h3>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Event</TableHead>
-                <TableHead className="text-right">Impact</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {simulation.events.map((event, index) => (
-                <TableRow key={index}>
-                  <TableCell>{event.date}</TableCell>
-                  <TableCell>{event.description}</TableCell>
-                  <TableCell className="text-right">
-                    <span className={event.impact > 0 ? "text-green-500" : "text-red-500"}>
-                      {event.impact > 0 ? '+' : ''}{event.impact}%
-                    </span>
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Event</TableHead>
+                  <TableHead className="text-right">Impact</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {simulation.events.map((event, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{event.date}</TableCell>
+                    <TableCell>{event.description}</TableCell>
+                    <TableCell className="text-right">
+                      <span className={event.impact > 0 ? "text-green-500" : "text-red-500"}>
+                        {event.impact > 0 ? '+' : ''}{event.impact}%
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>
@@ -160,11 +166,11 @@ function StatsCard({
 }) {
   return (
     <Card className="border-border/40">
-      <CardContent className="p-6">
+      <CardContent className="p-4 sm:p-6">
         <div className="flex flex-col">
           <span className="text-muted-foreground text-sm">{title}</span>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-2xl font-semibold">
+            <span className="text-xl sm:text-2xl font-semibold">
               {currency && '$'}{value}
             </span>
             {change && (
@@ -182,7 +188,7 @@ function StatsCard({
 function LoadingState() {
   return (
     <div className="space-y-6">
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-3">
         {[1, 2, 3].map(i => (
           <Card key={i} className="border-border/40">
             <CardContent className="p-6">

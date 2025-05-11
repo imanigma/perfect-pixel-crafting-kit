@@ -36,30 +36,32 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }, []);
   
   return (
-    <div className="flex min-h-screen bg-[#090B18] relative overflow-hidden">
+    <div className="flex min-h-screen bg-[#090B18] relative overflow-x-hidden">
       <Sidebar />
-      <div className="flex-1 flex flex-col items-center relative">
-        <div className="w-full h-screen flex flex-col items-center justify-center">
-          <FinanceHeader />
+      <div className="flex-1 flex flex-col items-center relative pb-20">
+        <div className="w-full min-h-screen flex flex-col items-center">
+          <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-16">
+            <FinanceHeader />
+          </div>
           
-          {/* Globe visualization */}
-          <div className="relative w-full mt-16">
+          {/* Globe visualization - adjusted size and positioning */}
+          <div className="relative w-full mt-8 sm:mt-12">
             <motion.div 
               className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1 }}
             >
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-gradient-to-br from-white/5 to-transparent blur-[100px] opacity-40"></div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-white/5 to-transparent blur-[100px] opacity-40"></div>
             </motion.div>
             
             <div 
               ref={globeRef}
-              className="relative w-full h-[400px] transition-transform duration-200 ease-out"
+              className="relative w-full h-[300px] sm:h-[350px] transition-transform duration-200 ease-out"
             >
               <div className="w-full h-full flex items-center justify-center overflow-hidden">
                 <motion.div 
-                  className="relative w-full h-full max-w-[700px] max-h-[700px]"
+                  className="relative w-full h-full max-w-[600px] max-h-[600px]"
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1 }}
@@ -74,8 +76,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
         </div>
         
-        {/* Render children if provided, otherwise render FinanceCards */}
-        {children || <FinanceCards />}
+        {/* Render children if provided, otherwise render FinanceCards with improved positioning */}
+        <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 mt-8">
+          {children || <FinanceCards />}
+        </div>
       </div>
     </div>
   );
