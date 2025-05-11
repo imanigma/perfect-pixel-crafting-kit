@@ -10,6 +10,7 @@ import Stocks from "./pages/Stocks";
 import AIAdvisor from "./pages/AIAdvisor";
 import FinancialNarrative from "./pages/FinancialNarrative";
 import FinanceJourney from "./pages/FinanceJourney";
+import TimeTravel from "./pages/TimeTravel";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import { VoiceAssistantButton } from "./components/VoiceAssistantButton";
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/ai-advisor" element={<AIAdvisor />} />
           <Route path="/financial-narrative" element={<FinancialNarrative />} />
           <Route path="/finance-journey" element={<FinanceJourney />} />
+          <Route path="/time-travel" element={<TimeTravel />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/security" element={<NotFound />} />
           <Route path="/help" element={<NotFound />} />
