@@ -30,7 +30,7 @@ export function FinanceCard({
       onClick={onClick}
       whileHover={{ 
         scale: 1.03,
-        boxShadow: variant === "premium" ? "0 0 30px rgba(39,81,185,0.4)" : "none" 
+        boxShadow: variant === "premium" ? "0 0 30px rgba(39,81,185,0.4)" : "0 0 15px rgba(51,57,69,0.3)" 
       }}
       whileTap={{ scale: 0.98 }}
       initial={{ opacity: 0, y: 20 }}
@@ -39,8 +39,8 @@ export function FinanceCard({
     >
       {variant === "premium" && (
         <>
-          <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-[#2751B9]/40 via-[#3962c8]/40 to-[#2751B9]/40 blur-[1.5px] -z-10" />
-          <div className="absolute -inset-[20px] bg-[#2751B9]/5 rounded-full blur-[20px] -z-20" />
+          <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-[#2751B9]/40 via-[#3962c8]/70 to-[#2751B9]/40 blur-[1.5px] -z-10" />
+          <div className="absolute -inset-[20px] bg-[#2751B9]/10 rounded-full blur-[20px] -z-20" />
         </>
       )}
       <div className={`mb-4 ${variant === "premium" ? "text-[#3962c8]" : "text-[#2751B9]"}`}>
