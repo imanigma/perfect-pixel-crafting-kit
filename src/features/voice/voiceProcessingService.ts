@@ -1,6 +1,7 @@
 
 import { pythonBackendService } from '@/services/pythonBackendService';
 import { toast } from '@/components/ui/sonner';
+import { speechService } from '@/services/voice/speechService';
 
 /**
  * Service for processing voice input with the backend
@@ -28,8 +29,20 @@ export const voiceProcessingService = {
       );
     } catch (error) {
       console.error("Error processing with Python backend:", error);
-      toast.error("Error processing your request. Please try again.");
-      throw error;
+      
+      // Fallback to our mock implementation if backend is unavailable
+      const responseText = await speechService.mockChatCompletion(inputText, pageContext, genZMode);
+      
+      // Create a synthetic response blob
+      // This would normally come from the backend TTS service
+      const mimeType = 'audio/mp3'; 
+      const blob = new Blob([new Uint8Array(0)], { type: mimeType });
+      
+      // Use browser's speech synthesis as fallback
+      speechService.speakResponse(responseText);
+      
+      toast.error("Using local speech synthesis due to backend connection issues.");
+      return blob;
     }
   },
 
@@ -57,8 +70,19 @@ export const voiceProcessingService = {
       );
     } catch (error) {
       console.error("Error processing text input:", error);
-      toast.error("Error processing your request. Please try again.");
-      throw error;
+      
+      // Fallback to our mock implementation if backend is unavailable
+      const responseText = await speechService.mockChatCompletion(text, pageContext, genZMode);
+      
+      // Create a synthetic response blob
+      const mimeType = 'audio/mp3';
+      const blob = new Blob([new Uint8Array(0)], { type: mimeType });
+      
+      // Use browser's speech synthesis as fallback
+      speechService.speakResponse(responseText);
+      
+      toast.warning("Using local speech synthesis due to backend connection issues.");
+      return blob;
     }
   },
 

@@ -4,6 +4,7 @@ import { toast } from '@/components/ui/sonner';
 import { VoiceAssistantMessage, UseVoiceAssistantOptions } from '@/features/voice/types';
 import { audioUtils, setupSpeechRecognition } from '@/features/voice/audioUtils';
 import { voiceProcessingService } from '@/features/voice/voiceProcessingService';
+import { speechService } from '@/services/voice/speechService';
 
 export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
   const [isListening, setIsListening] = useState(false);
@@ -19,6 +20,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
   const audioChunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const lastResponseRef = useRef<string>("");
 
   // Create audio element for playback
   useEffect(() => {
@@ -152,6 +154,13 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
       const pageContext = voiceProcessingService.getPageContext();
       
       try {
+        // Try to get the mock response directly as fallback
+        lastResponseRef.current = await speechService.mockChatCompletion(
+          inputText,
+          pageContext,
+          !!options.genZMode
+        );
+        
         // Process with our backend service
         const responseBlob = await voiceProcessingService.processAudio(
           audioBlob, 
@@ -172,7 +181,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
         setTimeout(() => {
           setMessages(prev => [...prev, { 
             role: "assistant", 
-            content: "I've processed your request about " + inputText.substring(0, 30) + "..." 
+            content: lastResponseRef.current || "I've processed your request." 
           }]);
           
           setIsProcessing(false);
@@ -205,6 +214,13 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
       const pageContext = voiceProcessingService.getPageContext();
       
       try {
+        // Try to get the mock response directly as fallback
+        lastResponseRef.current = await speechService.mockChatCompletion(
+          text,
+          pageContext,
+          !!options.genZMode
+        );
+        
         // Process with our backend service
         const responseBlob = await voiceProcessingService.processTextInput(
           text,
@@ -224,7 +240,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions = {}) {
         setTimeout(() => {
           setMessages(prev => [...prev, { 
             role: "assistant", 
-            content: "I've processed your text request." 
+            content: lastResponseRef.current || "I've processed your request." 
           }]);
           
           setUserInput("");
