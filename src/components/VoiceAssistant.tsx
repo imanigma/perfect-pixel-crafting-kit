@@ -2,127 +2,113 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mic, MicOff } from "lucide-react";
-import { Button } from "./ui/button";
-import { toast } from "sonner";
 
 export function VoiceAssistant() {
+  const [isActive, setIsActive] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
 
-  const toggleListening = () => {
-    if (isListening) {
-      setIsListening(false);
-      toast.info("Voice assistant stopped listening");
+  const toggleAssistant = () => {
+    setIsActive(!isActive);
+    if (!isActive) {
+      // Would connect to speech recognition here
+      console.log("Voice assistant activated");
     } else {
-      setIsListening(true);
-      toast.success("Voice assistant is listening...");
-      
-      // Simulate processing after 3 seconds
-      setTimeout(() => {
-        setIsProcessing(true);
-        
-        // Simulate response after 2 more seconds
-        setTimeout(() => {
-          setIsProcessing(false);
-          setIsListening(false);
-          toast.success("Your portfolio gained 2.3% last month with strongest performance in tech stocks");
-        }, 2000);
-      }, 3000);
+      setIsListening(false);
+      console.log("Voice assistant deactivated");
     }
   };
 
+  const toggleListening = () => {
+    setIsListening(!isListening);
+    console.log(isListening ? "Stopped listening" : "Started listening");
+  };
+
   return (
-    <div className="fixed bottom-6 right-6 z-50">
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.3 }}
+    <>
+      {/* Fixed voice assistant button */}
+      <motion.button
+        onClick={toggleAssistant}
+        className={`fixed bottom-8 right-8 z-50 rounded-full p-4 shadow-xl
+          ${isActive ? "bg-[#2751B9]" : "bg-[#151515]/80 border border-[#2751B9]/30"}`}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
       >
-        <Button
-          onClick={toggleListening}
-          className={`
-            w-12 h-12 rounded-full p-0 flex items-center justify-center
-            ${isListening 
-              ? 'bg-gradient-to-r from-[#2751B9] to-[#3962c8] shadow-lg shadow-[#2751B9]/20' 
-              : 'bg-[#151515] border border-[#333945]'}
-          `}
-        >
-          <AnimatePresence mode="wait">
-            {isListening ? (
-              <motion.div
-                key="listening"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-                className="relative"
+        <Mic className="w-6 h-6 text-white" />
+      </motion.button>
+
+      {/* Expanded assistant interface */}
+      <AnimatePresence>
+        {isActive && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="fixed bottom-24 right-8 w-80 bg-[#151515]/95 backdrop-blur-md border border-[#2751B9]/30 rounded-2xl p-5 shadow-2xl shadow-[#2751B9]/20 z-40"
+          >
+            <div className="flex flex-col items-center">
+              <motion.div 
+                className="w-24 h-24 rounded-full bg-[#151515] border-2 border-[#2751B9]/50 flex items-center justify-center mb-4"
+                animate={{ 
+                  boxShadow: isListening 
+                    ? ['0 0 0 rgba(39,81,185,0.4)', '0 0 20px rgba(39,81,185,0.8)', '0 0 0 rgba(39,81,185,0.4)'] 
+                    : '0 0 0 rgba(39,81,185,0.4)'
+                }}
+                transition={{ 
+                  repeat: isListening ? Infinity : 0, 
+                  duration: 1.5 
+                }}
               >
-                <MicOff size={20} className="text-white z-10" />
-                {isProcessing && (
-                  <motion.div 
-                    className="absolute inset-[-8px] rounded-full border-2 border-[#3962c8]"
-                    animate={{ 
-                      scale: [1, 1.2, 1],
-                      opacity: [1, 0.6, 1]
-                    }}
-                    transition={{ 
-                      duration: 1.5, 
-                      repeat: Infinity,
-                      ease: "easeInOut" 
-                    }}
-                  />
-                )}
+                <motion.button
+                  onClick={toggleListening}
+                  className="w-20 h-20 rounded-full bg-[#2751B9]/20 flex items-center justify-center"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {isListening ? (
+                    <motion.div
+                      initial={{ scale: 1 }}
+                      animate={{ 
+                        scale: [1, 1.2, 1], 
+                      }}
+                      transition={{ 
+                        repeat: Infinity, 
+                        duration: 1.5,
+                      }}
+                    >
+                      <Mic className="w-10 h-10 text-[#2751B9]" />
+                    </motion.div>
+                  ) : (
+                    <MicOff className="w-10 h-10 text-[#2751B9]/70" />
+                  )}
+                </motion.button>
               </motion.div>
-            ) : (
-              <motion.div
-                key="not-listening"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-              >
-                <Mic size={20} className="text-[#2751B9]" />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </Button>
-      </motion.div>
-      
-      {isListening && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-          className="absolute bottom-16 right-0 bg-[#151515] border border-[#333945] p-3 rounded-lg shadow-lg mb-2 w-[280px]"
-        >
-          <p className="text-xs text-[#8E9196] mb-1">
-            {isProcessing ? "Processing..." : "Listening..."}
-          </p>
-          <p className="text-sm text-white">
-            {isProcessing 
-              ? "Analyzing your portfolio data..." 
-              : "Say something like \"Summarize my portfolio performance\""}
-          </p>
-          
-          {isProcessing && (
-            <div className="mt-2 flex gap-1">
-              <motion.div 
-                className="h-1 w-1 rounded-full bg-[#2751B9]"
-                animate={{ y: [0, -5, 0] }}
-                transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 0.2 }}
-              />
-              <motion.div 
-                className="h-1 w-1 rounded-full bg-[#2751B9]"
-                animate={{ y: [0, -5, 0] }}
-                transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 0.3 }}
-              />
-              <motion.div 
-                className="h-1 w-1 rounded-full bg-[#2751B9]"
-                animate={{ y: [0, -5, 0] }}
-                transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 0.1 }}
-              />
+              
+              <h3 className="text-white text-xl font-semibold mb-2">
+                {isListening ? "Listening..." : "Trade Republic Assistant"}
+              </h3>
+              
+              <p className="text-[#8E9196] text-sm text-center mb-4">
+                {isListening 
+                  ? "Speak now. I'm listening to your request..." 
+                  : "Ask me anything about your finances or investments."}
+              </p>
+              
+              {!isListening && (
+                <div className="w-full">
+                  <div className="bg-[#222222] rounded-lg p-3 mb-3">
+                    <p className="text-sm text-[#8E9196]">Try saying:</p>
+                    <p className="text-sm text-white">"How did my portfolio perform this month?"</p>
+                  </div>
+                  <div className="bg-[#222222] rounded-lg p-3">
+                    <p className="text-sm text-[#8E9196]">Try saying:</p>
+                    <p className="text-sm text-white">"What are today's market trends?"</p>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
-        </motion.div>
-      )}
-    </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

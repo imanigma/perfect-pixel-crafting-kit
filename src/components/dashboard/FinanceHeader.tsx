@@ -1,27 +1,35 @@
 
 import React from "react";
+import { motion } from "framer-motion";
 
 export function FinanceHeader() {
   return (
-    <header className="text-center max-w-[600px] mt-[69px] mb-[70px]">
-      <div className="inline-block mb-3 px-4 py-2 bg-[#2751B9]/10 rounded-full">
+    <header className="text-center w-full max-w-[600px] mt-[40px] mb-[40px] px-4">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="inline-block mb-3 px-4 py-2 bg-[#2751B9]/10 rounded-full"
+      >
         <span className="text-[#2751B9] font-medium text-sm">Trade Republic</span>
-      </div>
-      <h1 className="text-[42px] text-white font-bold leading-[48px] tracking-[-1.2px] mb-[15px]">
-        Rethinking the Future of Fintech
-      </h1>
-      <p className="text-base text-[#8E9196] leading-6">
+      </motion.div>
+      <motion.h1
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="text-[42px] text-white font-bold leading-[48px] tracking-[-1.2px] mb-[15px]"
+      >
+        Welcome to the Future of Finance
+      </motion.h1>
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="text-base text-[#8E9196] leading-6"
+      >
         Democratizing wealth through zero-fee investments.
-        Access global markets and grow your portfolio with our commission-free platform.
-      </p>
-      <div className="mt-6 flex gap-3 justify-center">
-        <button className="bg-[#2751B9] hover:bg-[#3962c8] transition-colors text-white font-medium px-5 py-2.5 rounded-lg">
-          Get Started
-        </button>
-        <button className="bg-[#151515] hover:bg-[#1d1d1d] transition-colors border border-[#333945] text-white font-medium px-5 py-2.5 rounded-lg">
-          Learn More
-        </button>
-      </div>
+        Access global markets and grow your portfolio with our AI-powered platform.
+      </motion.p>
     </header>
   );
 }
