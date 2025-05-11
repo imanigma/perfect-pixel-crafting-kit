@@ -65,6 +65,16 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Added custom colors for our neon effects
+				purple: {
+					400: '#8B5CF6'
+				},
+				blue: {
+					400: '#0EA5E9'
+				},
+				orange: {
+					400: '#F97316'
 				}
 			},
 			borderRadius: {
@@ -96,9 +106,11 @@ export default {
 			},
 			boxShadow: {
 				'card': '0 4px 20px 0 rgba(39, 81, 185, 0.1)',
+				'neon-purple': '0 0 15px rgba(139, 92, 246, 0.5), 0 0 30px rgba(139, 92, 246, 0.3)',
+				'neon-blue': '0 0 15px rgba(14, 165, 233, 0.5), 0 0 30px rgba(14, 165, 233, 0.3)',
+				'neon-orange': '0 0 15px rgba(249, 115, 22, 0.5), 0 0 30px rgba(249, 115, 22, 0.3)',
 			}
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
-

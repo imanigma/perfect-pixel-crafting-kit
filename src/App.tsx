@@ -10,6 +10,7 @@ import Stocks from "./pages/Stocks";
 import AIAdvisor from "./pages/AIAdvisor";
 import FinancialNarrative from "./pages/FinancialNarrative";
 import FinanceJourney from "./pages/FinanceJourney";
+import { VoiceAssistantButton } from "./components/VoiceAssistantButton";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,8 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        {/* Voice Assistant Button appears on every page */}
+        <VoiceAssistantButton />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/stocks" element={<Stocks />} />
