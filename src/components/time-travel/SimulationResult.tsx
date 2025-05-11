@@ -96,8 +96,8 @@ export function SimulationResult({ simulation, isLoading }: SimulationResultProp
                     dot={false} 
                     strokeDasharray="5 5"
                   />
+                  <ChartLegend content={<ChartLegendContent />} />
                 </LineChart>
-                <ChartLegend content={<ChartLegendContent />} />
               </ChartContainer>
             </ResponsiveContainer>
           </div>
