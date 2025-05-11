@@ -15,54 +15,90 @@ export function VoiceAssistant() {
   
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   
-  // SpeechRecognition setup
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const recognitionRef = useRef<any>(null);
+  // SpeechRecognition setup with TypeScript support
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const speechSynthesisRef = useRef<SpeechSynthesis | null>(null);
 
   useEffect(() => {
-    if (SpeechRecognition) {
-      recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.continuous = true;
-      recognitionRef.current.interimResults = true;
+    // Initialize speech recognition
+    if (window.SpeechRecognition || window.webkitSpeechRecognition) {
+      const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognitionAPI();
       
-      recognitionRef.current.onresult = (event: any) => {
-        const transcript = Array.from(event.results)
-          .map((result: any) => result[0])
-          .map((result: any) => result.transcript)
-          .join("");
+      if (recognitionRef.current) {
+        recognitionRef.current.continuous = true;
+        recognitionRef.current.interimResults = true;
         
-        setUserInput(transcript);
-      };
-      
-      recognitionRef.current.onerror = (event: any) => {
-        console.error("Speech recognition error", event.error);
-        setIsListening(false);
-        toast.error("Speech recognition error. Please try again.");
-      };
+        recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
+          const transcript = Array.from(event.results)
+            .map((result) => result[0])
+            .map((result) => result.transcript)
+            .join("");
+          
+          setUserInput(transcript);
+        };
+        
+        recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
+          console.error("Speech recognition error", event.error);
+          setIsListening(false);
+          toast.error(`Speech recognition error: ${event.error}. Please try again.`);
+        };
+        
+        recognitionRef.current.onend = () => {
+          if (isListening) {
+            // Restart if we're still supposed to be listening
+            recognitionRef.current?.start();
+          }
+        };
+      }
     }
     
+    // Initialize speech synthesis
+    if ('speechSynthesis' in window) {
+      speechSynthesisRef.current = window.speechSynthesis;
+    }
+    
+    // Cleanup on unmount
     return () => {
       if (recognitionRef.current) {
         recognitionRef.current.stop();
       }
+      
+      if (speechSynthesisRef.current && speechSynthesisRef.current.speaking) {
+        speechSynthesisRef.current.cancel();
+      }
     };
-  }, []);
+  }, [isListening]);
 
   const toggleAssistant = () => {
     setIsActive(!isActive);
+    
     if (!isActive) {
       console.log("Voice assistant activated");
+      // Speak the initial greeting when activated
+      if (conversation.length === 1) {
+        setTimeout(() => {
+          speakResponse(conversation[0].content);
+        }, 300);
+      }
     } else {
       setIsListening(false);
       if (recognitionRef.current) {
         recognitionRef.current.stop();
       }
+      
+      // Stop speaking when deactivating
+      if (speechSynthesisRef.current && speechSynthesisRef.current.speaking) {
+        speechSynthesisRef.current.cancel();
+        setIsSpeaking(false);
+      }
+      
       console.log("Voice assistant deactivated");
     }
   };
 
   const toggleListening = () => {
-    if (!SpeechRecognition) {
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
       toast.error("Speech recognition is not supported in this browser.");
       return;
     }
@@ -70,11 +106,12 @@ export function VoiceAssistant() {
     if (!isListening) {
       setIsListening(true);
       setUserInput("");
-      recognitionRef.current.start();
+      recognitionRef.current?.start();
+      toast.success("I'm listening...", { duration: 2000 });
       console.log("Started listening");
     } else {
       setIsListening(false);
-      recognitionRef.current.stop();
+      recognitionRef.current?.stop();
       
       // Only handle processing if there's actual content
       if (userInput.trim()) {
@@ -84,7 +121,7 @@ export function VoiceAssistant() {
     }
   };
   
-  // Mock function to handle user queries
+  // Function to handle user queries
   const handleUserQuery = (query: string) => {
     // Add user message to conversation
     setConversation(prev => [...prev, { role: "user", content: query }]);
@@ -92,18 +129,32 @@ export function VoiceAssistant() {
     // Simulate AI processing
     setIsSpeaking(true);
     
-    // Mock response based on keywords in the query
+    // Generate response based on keywords in the query
     setTimeout(() => {
       let response = "";
       
-      if (query.toLowerCase().includes("portfolio") || query.toLowerCase().includes("earnings") || query.toLowerCase().includes("losses")) {
+      const lowercaseQuery = query.toLowerCase();
+      
+      if (lowercaseQuery.includes("portfolio") || lowercaseQuery.includes("earnings") || lowercaseQuery.includes("losses")) {
         response = "Your portfolio has grown by 3.2% in the last month. Your tech investments performed particularly well with a 5.7% gain.";
       }
-      else if (query.toLowerCase().includes("market") || query.toLowerCase().includes("trends")) {
+      else if (lowercaseQuery.includes("market") || lowercaseQuery.includes("trends")) {
         response = "Current market trends show technology and renewable energy sectors outperforming the general market. There's volatility in financial services due to recent regulatory changes.";
       }
-      else if (query.toLowerCase().includes("recommend") || query.toLowerCase().includes("invest")) {
+      else if (lowercaseQuery.includes("recommend") || lowercaseQuery.includes("invest")) {
         response = "Based on your risk profile and goals, I'd suggest diversifying into index ETFs with a small allocation to emerging markets. Would you like more specific recommendations?";
+      }
+      else if (lowercaseQuery.includes("hello") || lowercaseQuery.includes("hi") || lowercaseQuery.includes("hey")) {
+        response = "Hello! How can I assist with your finances today?";
+      }
+      else if (lowercaseQuery.includes("weather")) {
+        response = "I'm sorry, I don't have access to current weather data. I can help you with financial information though.";
+      }
+      else if (lowercaseQuery.includes("stock") || lowercaseQuery.includes("price")) {
+        response = "Your top performing stock is Apple with a 12% gain this quarter. Would you like to see more details about your stock portfolio?";
+      }
+      else if (lowercaseQuery.includes("saving") || lowercaseQuery.includes("save money")) {
+        response = "Based on your spending patterns, you could save an additional €350 per month by reducing discretionary spending in restaurants and entertainment.";
       }
       else {
         response = "I'm not sure I understood that query. Could you rephrase it? You can ask me about your portfolio performance, market trends, or investment recommendations.";
@@ -111,40 +162,64 @@ export function VoiceAssistant() {
       
       // Add AI response to conversation
       setConversation(prev => [...prev, { role: "assistant", content: response }]);
+      
+      // Speak the response
       speakResponse(response);
       
-      setIsSpeaking(false);
-    }, 1500);
+      setUserInput("");
+    }, 1000);
   };
   
+  // Function to speak the AI response using Speech Synthesis
   const speakResponse = (text: string) => {
-    if ('speechSynthesis' in window) {
-      const speech = new SpeechSynthesisUtterance();
-      speech.text = text;
-      speech.volume = 1;
-      speech.rate = 1;
-      speech.pitch = 1;
+    if (!speechSynthesisRef.current) {
+      console.error("Speech synthesis not available");
+      return;
+    }
+    
+    // Cancel any ongoing speech
+    if (speechSynthesisRef.current.speaking) {
+      speechSynthesisRef.current.cancel();
+    }
+    
+    const speech = new SpeechSynthesisUtterance();
+    speech.text = text;
+    speech.volume = 1;
+    speech.rate = 1;
+    speech.pitch = 1;
+    
+    // Try to set a better voice if available
+    const loadVoices = () => {
+      const voices = speechSynthesisRef.current?.getVoices() || [];
       
-      // On some systems, we need to set the voice
-      const voices = window.speechSynthesis.getVoices();
       if (voices.length > 0) {
         // Try to find a female voice for better quality
-        const femaleVoice = voices.find(voice => 
+        const preferredVoice = voices.find(voice => 
           voice.name.includes('Female') || 
           voice.name.includes('Samantha') ||
-          voice.name.includes('Google UK English Female')
-        );
+          voice.name.includes('Google UK English Female') ||
+          (voice.lang.includes('en') && voice.name.includes('Google'))
+        ) || voices[0];
         
-        if (femaleVoice) {
-          speech.voice = femaleVoice;
-        }
+        speech.voice = preferredVoice;
       }
-      
-      window.speechSynthesis.speak(speech);
-      
-      speech.onstart = () => setIsSpeaking(true);
-      speech.onend = () => setIsSpeaking(false);
+    };
+    
+    if (speechSynthesisRef.current.getVoices().length) {
+      loadVoices();
+    } else {
+      // If voices aren't loaded yet, wait for them
+      speechSynthesisRef.current.onvoiceschanged = loadVoices;
     }
+    
+    speech.onstart = () => setIsSpeaking(true);
+    speech.onend = () => setIsSpeaking(false);
+    speech.onerror = () => {
+      setIsSpeaking(false);
+      toast.error("Error while speaking. Please try again.");
+    };
+    
+    speechSynthesisRef.current.speak(speech);
   };
 
   // Handle keyboard submit
