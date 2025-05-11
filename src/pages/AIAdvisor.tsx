@@ -12,9 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Brain, RefreshCw, MessageSquare, DollarSign } from "lucide-react";
 import { motion } from "framer-motion";
-import { BuffettPortfolio } from "@/components/advisors/BuffettPortfolio";
-import { AckmanPortfolio } from "@/components/advisors/AckmanPortfolio";
-import { BurryPortfolio } from "@/components/advisors/BurryPortfolio";
+import { BuffettPortfolio, AckmanPortfolio, BurryPortfolio } from "@/components/advisors";
 
 const advisors = [
   {

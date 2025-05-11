@@ -1,57 +1,26 @@
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Sidebar } from "./Sidebar";
 import { FinanceHeader } from "./FinanceHeader";
 import { FinanceCards } from "./FinanceCards";
 import { motion } from "framer-motion";
 import { Mic, MicOff } from "lucide-react";
 import { toast } from "../ui/sonner";
+import { useVoiceAssistant } from "@/hooks/useVoiceAssistant";
 
 export function DashboardLayout() {
   const globeRef = useRef<HTMLDivElement>(null);
-  const [isListening, setIsListening] = useState(false);
-  const [userInput, setUserInput] = useState("");
-  const recognitionRef = useRef<any>(null);
+  const { 
+    isListening, 
+    userInput, 
+    startListening, 
+    stopListening 
+  } = useVoiceAssistant({
+    onProcessStart: () => toast.success("Processing your request..."),
+    onProcessEnd: () => toast.success("Request processed!")
+  });
   
-  // SpeechRecognition setup
-  useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
-    
-    if (SpeechRecognition) {
-      recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.continuous = true;
-      recognitionRef.current.interimResults = true;
-      
-      recognitionRef.current.onresult = (event: any) => {
-        const transcript = Array.from(event.results)
-          .map((result: any) => result[0])
-          .map((result: any) => result.transcript)
-          .join("");
-        
-        setUserInput(transcript);
-      };
-      
-      recognitionRef.current.onerror = (event: any) => {
-        console.error("Speech recognition error", event.error);
-        setIsListening(false);
-        toast.error("Speech recognition error. Please try again.");
-      };
-      
-      recognitionRef.current.onend = () => {
-        if (isListening) {
-          // If we're still supposed to be listening, restart
-          recognitionRef.current.start();
-        }
-      };
-    }
-    
-    return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
-      }
-    };
-  }, [isListening]);
-
+  // Globe effect with mouse tracking
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!globeRef.current) return;
@@ -75,51 +44,11 @@ export function DashboardLayout() {
   }, []);
 
   const toggleListening = () => {
-    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
-    
-    if (!SpeechRecognition) {
-      toast.error("Speech recognition is not supported in this browser.");
-      return;
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
     }
-    
-    setIsListening(prevState => {
-      const newListeningState = !prevState;
-      
-      if (newListeningState) {
-        setUserInput("");
-        recognitionRef.current.start();
-        toast.success("Listening... Ask me about your finances");
-      } else {
-        recognitionRef.current.stop();
-        
-        if (userInput.trim()) {
-          handleUserQuery(userInput);
-        }
-      }
-      
-      return newListeningState;
-    });
-  };
-
-  // Mock function to handle user queries
-  const handleUserQuery = (query: string) => {
-    // Simple responses based on keywords
-    let response = "";
-    
-    if (query.toLowerCase().includes("portfolio") || query.toLowerCase().includes("earnings") || query.toLowerCase().includes("losses")) {
-      response = "Your portfolio has grown by 3.2% in the last month. Your tech investments performed particularly well with a 5.7% gain.";
-    }
-    else if (query.toLowerCase().includes("market") || query.toLowerCase().includes("trends")) {
-      response = "Current market trends show technology and renewable energy sectors outperforming the general market. There's volatility in financial services due to recent regulatory changes.";
-    }
-    else if (query.toLowerCase().includes("recommend") || query.toLowerCase().includes("invest")) {
-      response = "Based on your risk profile and goals, I'd suggest diversifying into index ETFs with a small allocation to emerging markets. Would you like more specific recommendations?";
-    }
-    else {
-      response = "I'm not sure I understood that query. Could you rephrase it? You can ask me about your portfolio performance, market trends, or investment recommendations.";
-    }
-    
-    toast.success(response);
   };
   
   return (
