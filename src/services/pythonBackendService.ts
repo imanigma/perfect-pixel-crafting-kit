@@ -9,6 +9,7 @@ const pythonApi = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 10000, // Add timeout for better error handling
 });
 
 // Error handling interceptor
@@ -37,6 +38,20 @@ export const pythonBackendService = {
   async post<T>(endpoint: string, data: any): Promise<T> {
     const response = await pythonApi.post<T>(endpoint, data);
     return response.data;
+  },
+
+  /**
+   * Check if the Python backend is available
+   */
+  async checkConnection(): Promise<boolean> {
+    try {
+      // You should implement a simple health-check endpoint in your Python backend
+      await pythonApi.get('/health-check', { timeout: 3000 });
+      return true;
+    } catch (error) {
+      console.error('Python backend connection failed:', error);
+      return false;
+    }
   },
 
   /**

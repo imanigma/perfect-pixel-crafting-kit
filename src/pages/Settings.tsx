@@ -1,20 +1,53 @@
+
 import React from "react";
 import { DashboardLayout } from "@/components/dashboard";
 import { usePythonBackend } from "@/hooks/usePythonBackend";
 import { toast } from "@/components/ui/sonner";
+import { Loader2 } from "lucide-react";
 
 const Settings = () => {
   const {
     inputData,
     setInputData,
     handleSubmit,
-    isProcessing
+    isProcessing,
+    connectionStatus,
+    testConnection
   } = usePythonBackend();
 
-  const handleTestConnection = () => {
+  const handleTestConnection = async () => {
     toast.info("Testing connection to Python backend...");
-    // This is just a visual demonstration - replace with actual API call
-    setTimeout(() => toast.success("Connection to Python backend successful!"), 1500);
+    const isConnected = await testConnection();
+    
+    if (isConnected) {
+      toast.success("Connection to Python backend successful!");
+    } else {
+      toast.error("Failed to connect to Python backend!");
+    }
+  };
+
+  // Helper function to get status indicator color
+  const getStatusColor = () => {
+    switch (connectionStatus) {
+      case 'connected':
+        return 'bg-green-500';
+      case 'disconnected':
+        return 'bg-red-500';
+      default:
+        return 'bg-yellow-500 animate-pulse';
+    }
+  };
+
+  // Helper function to get status text
+  const getStatusText = () => {
+    switch (connectionStatus) {
+      case 'connected':
+        return 'Connected';
+      case 'disconnected':
+        return 'Disconnected';
+      default:
+        return 'Checking connection...';
+    }
   };
 
   return (
@@ -25,8 +58,9 @@ const Settings = () => {
         <div className="bg-[#151515]/80 border border-[#333333] rounded-xl p-6 shadow-lg mb-8">
           <h2 className="text-xl font-semibold text-white mb-4">Python Backend Connection</h2>
           <div className="flex items-center space-x-4 mb-6">
-            <div className="h-3 w-3 rounded-full bg-green-500"></div>
-            <span className="text-white">Backend Status: Connected</span>
+            <div className={`h-3 w-3 rounded-full ${getStatusColor()}`}></div>
+            <span className="text-white">Backend Status: {getStatusText()}</span>
+            {connectionStatus === 'checking' && <Loader2 className="h-4 w-4 animate-spin text-white" />}
           </div>
           
           <button 
@@ -55,9 +89,11 @@ const Settings = () => {
             
             <button 
               onClick={handleSubmit}
-              disabled={isProcessing || !inputData.trim()}
+              disabled={isProcessing || !inputData.trim() || connectionStatus !== 'connected'}
               className={`px-4 py-2 bg-[#2751B9] text-white rounded transition-colors ${
-                isProcessing || !inputData.trim() ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#3962c8]'
+                isProcessing || !inputData.trim() || connectionStatus !== 'connected' 
+                  ? 'opacity-50 cursor-not-allowed' 
+                  : 'hover:bg-[#3962c8]'
               }`}
             >
               {isProcessing ? 'Processing...' : 'Process with Python'}

@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { pythonBackendService } from '@/services/pythonBackendService';
 
@@ -8,13 +8,29 @@ import { pythonBackendService } from '@/services/pythonBackendService';
  */
 export function usePythonBackend() {
   const [inputData, setInputData] = useState('');
+  const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'disconnected'>('checking');
+
+  // Check connection to Python backend on mount
+  useEffect(() => {
+    const checkBackendConnection = async () => {
+      setConnectionStatus('checking');
+      try {
+        const isConnected = await pythonBackendService.checkConnection();
+        setConnectionStatus(isConnected ? 'connected' : 'disconnected');
+      } catch (error) {
+        setConnectionStatus('disconnected');
+      }
+    };
+    
+    checkBackendConnection();
+  }, []);
 
   // Example query to get data from Python backend
   const { data: financialData, isLoading, error } = useQuery({
     queryKey: ['financialData'],
     queryFn: () => pythonBackendService.getFinancialData(),
     // Don't auto-fetch on mount - uncomment if you want to fetch on component mount
-    // enabled: false,
+    enabled: false,
   });
 
   // Example mutation to send data to Python backend
@@ -25,6 +41,19 @@ export function usePythonBackend() {
       // Handle successful processing here
     },
   });
+
+  // Test connection to Python backend
+  const testConnection = async () => {
+    setConnectionStatus('checking');
+    try {
+      const isConnected = await pythonBackendService.checkConnection();
+      setConnectionStatus(isConnected ? 'connected' : 'disconnected');
+      return isConnected;
+    } catch (error) {
+      setConnectionStatus('disconnected');
+      return false;
+    }
+  };
 
   // Handle submitting data to Python backend
   const handleSubmit = () => {
@@ -41,6 +70,8 @@ export function usePythonBackend() {
     inputData,
     setInputData,
     handleSubmit,
-    processInput
+    processInput,
+    connectionStatus,
+    testConnection
   };
 }
