@@ -1,7 +1,20 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Brain, BookOpen, Calendar, Home, LayoutDashboard, BarChart3, User, Settings, Shield, HelpCircle, Moon, LogOut } from "lucide-react";
+import { 
+  Home, 
+  LayoutDashboard, 
+  BarChart3, 
+  Brain, 
+  BookOpen, 
+  Calendar, 
+  User, 
+  Settings, 
+  Shield, 
+  HelpCircle, 
+  Moon, 
+  LogOut 
+} from "lucide-react";
 
 export function Sidebar() {
   const location = useLocation();
@@ -12,7 +25,7 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="w-[260px] bg-[#121525] border-r border-[#2B2E3D] flex flex-col items-center py-6 max-sm:hidden">
+    <aside className="w-[260px] bg-[#101124] border-r border-[#2B2E3D]/30 flex flex-col items-center py-6 max-sm:hidden">
       <div className="flex flex-col items-center w-full">
         {/* Logo */}
         <div className="flex items-center px-6 mb-10">
@@ -33,7 +46,7 @@ export function Sidebar() {
               to="/" 
               className={`flex items-center px-4 py-3 rounded-lg transition-all ${
                 isActive('/') 
-                  ? 'bg-[#29307c] text-white' 
+                  ? 'bg-[#3F51B5] text-white' 
                   : 'text-[#8E9196] hover:bg-[#1A1F2C]/40 hover:text-white'
               }`}
             >
@@ -45,7 +58,7 @@ export function Sidebar() {
               to="/dashboard" 
               className={`flex items-center px-4 py-3 rounded-lg transition-all ${
                 isActive('/dashboard') 
-                  ? 'bg-[#29307c] text-white' 
+                  ? 'bg-[#3F51B5] text-white' 
                   : 'text-[#8E9196] hover:bg-[#1A1F2C]/40 hover:text-white'
               }`}
             >
@@ -57,7 +70,7 @@ export function Sidebar() {
               to="/stocks" 
               className={`flex items-center px-4 py-3 rounded-lg transition-all ${
                 isActive('/stocks') 
-                  ? 'bg-[#29307c] text-white' 
+                  ? 'bg-[#3F51B5] text-white' 
                   : 'text-[#8E9196] hover:bg-[#1A1F2C]/40 hover:text-white'
               }`}
             >
@@ -69,7 +82,7 @@ export function Sidebar() {
               to="/ai-advisor" 
               className={`flex items-center px-4 py-3 rounded-lg transition-all ${
                 isActive('/ai-advisor') 
-                  ? 'bg-[#29307c] text-white' 
+                  ? 'bg-[#3F51B5] text-white' 
                   : 'text-[#8E9196] hover:bg-[#1A1F2C]/40 hover:text-white'
               }`}
             >
@@ -81,40 +94,43 @@ export function Sidebar() {
               to="/financial-narrative" 
               className={`flex items-center px-4 py-3 rounded-lg transition-all ${
                 isActive('/financial-narrative') 
-                  ? 'bg-[#29307c] text-white' 
+                  ? 'bg-[#3F51B5] text-white' 
                   : 'text-[#8E9196] hover:bg-[#1A1F2C]/40 hover:text-white'
               }`}
             >
               <BookOpen className="w-5 h-5 mr-3" />
-              <span className="font-medium">Financial Summary</span>
+              <span className="font-medium">Financial summary</span>
             </Link>
             
             <Link 
               to="/finance-journey" 
               className={`flex items-center px-4 py-3 rounded-lg transition-all ${
                 isActive('/finance-journey') 
-                  ? 'bg-[#29307c] text-white' 
+                  ? 'bg-[#3F51B5] text-white' 
                   : 'text-[#8E9196] hover:bg-[#1A1F2C]/40 hover:text-white'
               }`}
             >
               <Calendar className="w-5 h-5 mr-3" />
               <span className="font-medium">Financial Journey</span>
             </Link>
+            
+            <Link 
+              to="/accounts" 
+              className={`flex items-center px-4 py-3 rounded-lg transition-all ${
+                isActive('/accounts') 
+                  ? 'bg-[#3F51B5] text-white' 
+                  : 'text-[#8E9196] hover:bg-[#1A1F2C]/40 hover:text-white'
+              }`}
+            >
+              <User className="w-5 h-5 mr-3" />
+              <span className="font-medium">Accounts</span>
+            </Link>
           </nav>
         </div>
         
-        {/* Account & Settings */}
+        {/* Settings & Security */}
         <div className="w-full px-4">
-          <div className="text-[#5C5E65] text-xs font-medium uppercase px-4 mb-2">Account</div>
           <nav className="space-y-1">
-            <Link 
-              to="/profile" 
-              className="flex items-center px-4 py-3 rounded-lg text-[#8E9196] hover:bg-[#1A1F2C]/40 hover:text-white transition-all"
-            >
-              <User className="w-5 h-5 mr-3" />
-              <span className="font-medium">Profile</span>
-            </Link>
-            
             <Link 
               to="/settings" 
               className="flex items-center px-4 py-3 rounded-lg text-[#8E9196] hover:bg-[#1A1F2C]/40 hover:text-white transition-all"
@@ -136,13 +152,13 @@ export function Sidebar() {
               className="flex items-center px-4 py-3 rounded-lg text-[#8E9196] hover:bg-[#1A1F2C]/40 hover:text-white transition-all"
             >
               <HelpCircle className="w-5 h-5 mr-3" />
-              <span className="font-medium">Help Center</span>
+              <span className="font-medium">Help Centre</span>
             </Link>
           </nav>
         </div>
       </div>
       
-      {/* Footer - User & Dark Mode */}
+      {/* Footer - Dark Mode Toggle */}
       <div className="mt-auto w-full px-4">
         <div className="border-t border-[#2B2E3D] pt-4 mt-8 px-3">
           <div className="flex items-center justify-between mb-4">
@@ -165,7 +181,7 @@ export function Sidebar() {
               <Moon className="w-4 h-4 text-[#8E9196] mr-2" />
               <span className="text-[#8E9196] text-sm">Dark Mode</span>
             </div>
-            <div className="w-10 h-5 bg-[#29307c] rounded-full relative">
+            <div className="w-10 h-5 bg-[#3F51B5] rounded-full relative">
               <div className="absolute w-4 h-4 bg-white rounded-full top-0.5 left-5 transform transition-transform"></div>
             </div>
           </div>
