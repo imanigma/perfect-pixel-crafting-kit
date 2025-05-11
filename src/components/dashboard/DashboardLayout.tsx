@@ -44,24 +44,24 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <FinanceHeader />
           </div>
           
-          {/* Globe visualization - reduced size and spacing */}
-          <div className="relative w-full mt-4">
+          {/* Globe visualization - reduced size and compact spacing */}
+          <div className="relative w-full mt-2">
             <motion.div 
               className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1 }}
             >
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-white/5 to-transparent blur-[100px] opacity-40"></div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] rounded-full bg-gradient-to-br from-white/5 to-transparent blur-[100px] opacity-40"></div>
             </motion.div>
             
             <div 
               ref={globeRef}
-              className="relative w-full h-[200px] sm:h-[220px] transition-transform duration-200 ease-out"
+              className="relative w-full h-[180px] sm:h-[200px] transition-transform duration-200 ease-out"
             >
               <div className="w-full h-full flex items-center justify-center overflow-hidden">
                 <motion.div 
-                  className="relative w-full h-full max-w-[500px] max-h-[500px]"
+                  className="relative w-full h-full max-w-[450px] max-h-[450px]"
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1 }}
@@ -76,8 +76,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
         </div>
         
-        {/* Render children if provided, otherwise render FinanceCards with improved positioning */}
-        <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 mt-6">
+        {/* Render children if provided, otherwise render FinanceCards with tighter spacing */}
+        <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 mt-4">
           {children || <FinanceCards />}
         </div>
       </div>
