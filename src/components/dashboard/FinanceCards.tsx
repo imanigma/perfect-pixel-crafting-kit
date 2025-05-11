@@ -102,7 +102,7 @@ export function FinanceCards() {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        delayChildren: 0.3
+        delayChildren: 0.2
       }
     }
   };
@@ -120,7 +120,7 @@ export function FinanceCards() {
   };
 
   return (
-    <div className="absolute top-[650px] left-1/2 transform -translate-x-1/2 z-10 w-full max-w-6xl">
+    <div className="absolute top-[380px] left-1/2 transform -translate-x-1/2 z-10 w-full max-w-6xl">
       <motion.div
         variants={containerVariants}
         initial="hidden"

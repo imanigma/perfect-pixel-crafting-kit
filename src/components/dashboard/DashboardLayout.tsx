@@ -13,11 +13,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     <div className="flex min-h-screen bg-[#090B18] relative overflow-hidden">
       <Sidebar />
       <div className="flex-1 flex flex-col items-center relative">
-        <div className="w-full flex flex-col items-center justify-center pt-24 pb-12">
+        <div className="w-full flex flex-col items-center justify-center pt-20 pb-4">
           <FinanceHeader />
           
-          {/* Spacer div to control spacing between header and cards */}
-          <div className="h-[40px]"></div>
+          {/* Reduced spacer height between header and cards */}
+          <div className="h-[16px]"></div>
         </div>
         
         {/* Render children if provided, otherwise render FinanceCards */}
