@@ -5,7 +5,11 @@ import { FinanceHeader } from "./FinanceHeader";
 import { FinanceCards } from "./FinanceCards";
 import { motion } from "framer-motion";
 
-export function DashboardLayout() {
+interface DashboardLayoutProps {
+  children?: React.ReactNode;
+}
+
+export function DashboardLayout({ children }: DashboardLayoutProps) {
   const globeRef = useRef<HTMLDivElement>(null);
   
   // Globe effect with mouse tracking
@@ -70,7 +74,8 @@ export function DashboardLayout() {
           </div>
         </div>
         
-        <FinanceCards />
+        {/* Render children if provided, otherwise render FinanceCards */}
+        {children || <FinanceCards />}
       </div>
     </div>
   );
