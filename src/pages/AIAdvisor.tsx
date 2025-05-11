@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { 
@@ -17,6 +18,7 @@ import {
   BurryPortfolio 
 } from "@/components/advisors";
 import { VoiceAssistantButton } from "@/components/VoiceAssistantButton";
+import { InvestorPerformanceChart } from "@/components/investors/InvestorPerformanceChart";
 
 export default function AIAdvisor() {
   const [activeTab, setActiveTab] = useState("buffett");
@@ -29,11 +31,11 @@ export default function AIAdvisor() {
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
               <BrainCircuit className="h-6 w-6 text-[#9b87f5]" />
-              <h1 className="text-3xl font-semibold text-white">AI Investment Advisor</h1>
+              <h1 className="text-3xl font-semibold text-white">Investor Clone</h1>
             </div>
             <VoiceAssistantButton variant="inline" />
           </div>
-          <p className="text-[#8E9196] mb-6">Personalized investment strategies based on legendary investors</p>
+          <p className="text-[#8E9196] mb-6">Replicate investment strategies of legendary investors</p>
           
           <Tabs defaultValue="buffett" value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid grid-cols-3 bg-[#151515] border-[#333945]">
@@ -51,22 +53,25 @@ export default function AIAdvisor() {
               </TabsTrigger>
             </TabsList>
             
-            <TabsContent value="buffett" className="mt-0">
+            <TabsContent value="buffett" className="mt-6">
+              <InvestorPerformanceChart investorName="Warren Buffett" />
               <BuffettPortfolio />
             </TabsContent>
             
-            <TabsContent value="ackman" className="mt-0">
+            <TabsContent value="ackman" className="mt-6">
+              <InvestorPerformanceChart investorName="Bill Ackman" />
               <AckmanPortfolio />
             </TabsContent>
             
-            <TabsContent value="burry" className="mt-0">
+            <TabsContent value="burry" className="mt-6">
+              <InvestorPerformanceChart investorName="Michael Burry" />
               <BurryPortfolio />
             </TabsContent>
           </Tabs>
           
           <Card className="bg-[#151515] border-[#333945] text-white mt-6">
             <CardHeader>
-              <CardTitle className="text-xl">AI Advisor Insights</CardTitle>
+              <CardTitle className="text-xl">AI Investor Insights</CardTitle>
               <CardDescription className="text-[#8E9196]">
                 AI-generated analysis of top investment strategies
               </CardDescription>

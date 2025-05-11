@@ -1,7 +1,8 @@
+
 import React from "react";
 import { FinanceCard } from "./FinanceCard";
 import { useNavigate } from "react-router-dom";
-import { Brain, BookOpen, Calendar, Clock } from "lucide-react";
+import { Brain, BookOpen, Calendar, Clock, Leaf } from "lucide-react";
 import { motion } from "framer-motion";
 
 export function FinanceCards() {
@@ -96,6 +97,8 @@ export function FinanceCards() {
   
   const timeTravelIcon = <Clock className="w-[50px] h-[50px] text-white" />;
 
+  const sustainableIcon = <Leaf className="w-[50px] h-[50px] text-white" />;
+
   // Card animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -169,7 +172,7 @@ export function FinanceCards() {
           {/* Premium AI cards with enhanced styling */}
           <motion.div variants={itemVariants}>
             <FinanceCard
-              title="AI Advisor"
+              title="Investor Clone"
               description="Investment strategies from legendary investors"
               icon={aiAdvisorIcon}
               onClick={() => handleCardClick('/ai-advisor')}
@@ -203,6 +206,17 @@ export function FinanceCards() {
               description="Explore alternate financial realities"
               icon={timeTravelIcon}
               onClick={() => handleCardClick('/time-travel')}
+              variant="premium"
+            />
+          </motion.div>
+          
+          {/* Add Sustainable Finance card */}
+          <motion.div variants={itemVariants}>
+            <FinanceCard
+              title="Sustainable Finance"
+              description="Invest in environmental and social impact"
+              icon={sustainableIcon}
+              onClick={() => handleCardClick('/sustainable-finance')}
               variant="premium"
             />
           </motion.div>

@@ -13,6 +13,7 @@ import FinanceJourney from "./pages/FinanceJourney";
 import TimeTravel from "./pages/TimeTravel";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
+import SustainableFinance from "./pages/SustainableFinance";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/financial-narrative" element={<FinancialNarrative />} />
           <Route path="/finance-journey" element={<FinanceJourney />} />
           <Route path="/time-travel" element={<TimeTravel />} />
+          <Route path="/sustainable-finance" element={<SustainableFinance />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/security" element={<NotFound />} />
           <Route path="/help" element={<NotFound />} />
