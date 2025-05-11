@@ -1,22 +1,34 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { VoiceAssistantButton } from "../VoiceAssistantButton";
 
 export function FinanceHeader() {
   return (
-    <header className="text-center w-full max-w-[600px] px-4">
+    <div className="w-full max-w-7xl px-6">
+      <div className="flex items-center justify-between mb-1">
+        <h1 className="text-4xl font-bold tracking-tight text-white">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            Dashboard
+          </motion.div>
+        </h1>
+        
+        {/* Voice Assistant Button (inline variant) */}
+        <VoiceAssistantButton variant="inline" />
+      </div>
+      
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="text-base text-[#8E9196] leading-6"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.2 }}
+        className="text-[#8E9196] mb-2"
       >
-        <h1 className="text-4xl sm:text-5xl text-white font-bold mb-4">All your finances..</h1>
-        <p className="text-lg">
-          Earn 2.25% interest on unlimited cash with your current account.<br/>
-          Get your subscription free card to spend and earn 1% Saveback.
-        </p>
+        Welcome back! Here is an overview of your financial portfolio.
       </motion.div>
-    </header>
+    </div>
   );
 }

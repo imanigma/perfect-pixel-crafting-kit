@@ -31,6 +31,7 @@ import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Timeline } from "@/components/timetravel/Timeline";
 import { AlternateRealitySimulator } from "@/components/timetravel/AlternateRealitySimulator";
+import { VoiceAssistantButton } from "@/components/VoiceAssistantButton";
 
 export default function TimeTravel() {
   const [activeTab, setActiveTab] = useState("timeline");
@@ -40,9 +41,12 @@ export default function TimeTravel() {
       <Sidebar />
       <div className="flex-1 p-8 overflow-y-auto">
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center gap-3 mb-2">
-            <Clock className="h-6 w-6 text-[#9b87f5]" />
-            <h1 className="text-3xl font-semibold text-white">Financial Time Travel</h1>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <Clock className="h-6 w-6 text-[#9b87f5]" />
+              <h1 className="text-3xl font-semibold text-white">Financial Time Travel</h1>
+            </div>
+            <VoiceAssistantButton variant="inline" />
           </div>
           <p className="text-[#8E9196] mb-6">Explore how different investment decisions could have changed your financial future</p>
           

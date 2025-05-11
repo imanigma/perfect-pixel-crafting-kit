@@ -13,7 +13,6 @@ import FinanceJourney from "./pages/FinanceJourney";
 import TimeTravel from "./pages/TimeTravel";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
-import { VoiceAssistantButton } from "./components/VoiceAssistantButton";
 
 const queryClient = new QueryClient();
 
@@ -23,8 +22,6 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        {/* Voice Assistant Button appears on every page */}
-        <VoiceAssistantButton />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />

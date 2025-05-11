@@ -6,7 +6,12 @@ import { toast } from "./ui/sonner";
 import { useVoiceAssistant } from "@/hooks/useVoiceAssistant";
 import { VoiceAssistant } from "./VoiceAssistant";
 
-export function VoiceAssistantButton() {
+interface VoiceAssistantButtonProps {
+  variant?: "fixed" | "inline";
+  className?: string;
+}
+
+export function VoiceAssistantButton({ variant = "fixed", className = "" }: VoiceAssistantButtonProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   
   const { 
@@ -26,15 +31,24 @@ export function VoiceAssistantButton() {
     }
   };
 
+  // Base styles for the button
+  const baseButtonStyle = `rounded-full p-3 shadow-xl
+    ${isExpanded || isListening || isSpeaking
+      ? "bg-[#2751B9] shadow-[0_0_20px_rgba(39,81,185,0.4)]" 
+      : "bg-[#151515]/80 border border-[#2751B9]/30"}
+    ${className}`;
+
+  // Apply positioning based on variant
+  const buttonStyle = variant === "fixed" 
+    ? `fixed top-6 right-6 z-50 ${baseButtonStyle}`
+    : baseButtonStyle;
+
   return (
     <>
-      {/* Fixed voice assistant button - positioned in top-right corner */}
+      {/* Voice assistant button with conditional positioning */}
       <motion.button
         onClick={toggleAssistant}
-        className={`fixed top-6 right-6 z-50 rounded-full p-3 shadow-xl
-          ${isExpanded || isListening || isSpeaking
-            ? "bg-[#2751B9] shadow-[0_0_20px_rgba(39,81,185,0.4)]" 
-            : "bg-[#151515]/80 border border-[#2751B9]/30"}`}
+        className={buttonStyle}
         whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(39,81,185,0.5)" }}
         whileTap={{ scale: 0.95 }}
         initial={{ opacity: 0, y: -10 }}
