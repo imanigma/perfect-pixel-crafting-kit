@@ -22,8 +22,15 @@ export const voiceProcessingService = {
     
     try {
       // Process with Python backend service
+      // Pass the inputText to the backend so it can be used if transcription fails
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'recording.webm');
+      formData.append('page_text', pageContext);
+      formData.append('text_input', inputText); // Add the text input
+      formData.append('gen_z_mode', genZMode ? 'unhinged' : 'normal');
+      
       return await pythonBackendService.processVoiceInput(
-        audioBlob, 
+        formData,
         pageContext, 
         genZMode
       );
@@ -62,9 +69,16 @@ export const voiceProcessingService = {
       // Create an empty audio blob for consistency with voice API
       const emptyAudioBlob = new Blob([], { type: 'audio/webm' });
       
+      // Create FormData to send directly
+      const formData = new FormData();
+      formData.append('audio', emptyAudioBlob, 'empty.webm');
+      formData.append('page_text', pageContext);
+      formData.append('text_input', text); // Add the text input directly
+      formData.append('gen_z_mode', genZMode ? 'unhinged' : 'normal');
+      
       // Process with Python backend service
       return await pythonBackendService.processVoiceInput(
-        emptyAudioBlob, 
+        formData,
         pageContext, 
         genZMode
       );

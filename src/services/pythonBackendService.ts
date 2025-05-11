@@ -16,8 +16,14 @@ const pythonApi = axios.create({
 pythonApi.interceptors.response.use(
   (response) => response,
   (error) => {
-    const message = error.response?.data?.message || 'Failed to connect to Python backend';
-    toast.error(message);
+    if (error.code === 'ERR_NETWORK') {
+      console.error('Network error when connecting to Python backend:', error);
+      const message = 'Failed to connect to Python backend. Is your server running?';
+      toast.error(message);
+    } else {
+      const message = error.response?.data?.message || 'Failed to connect to Python backend';
+      toast.error(message);
+    }
     return Promise.reject(error);
   }
 );
@@ -81,13 +87,8 @@ export const pythonBackendService = {
   /**
    * Process voice input through the backend
    */
-  async processVoiceInput(audioBlob: Blob, pageContext: string, genZMode: boolean = false): Promise<Blob> {
+  async processVoiceInput(formData: FormData, pageContext: string, genZMode: boolean = false): Promise<Blob> {
     try {
-      const formData = new FormData();
-      formData.append('audio', audioBlob, 'recording.webm');
-      formData.append('page_text', pageContext);
-      formData.append('gen_z_mode', genZMode ? 'unhinged' : 'normal');
-
       const response = await axios.post(`${pythonApi.defaults.baseURL}/voice`, formData, {
         responseType: 'blob',
         headers: {
@@ -98,7 +99,13 @@ export const pythonBackendService = {
       return response.data;
     } catch (error) {
       console.error('Failed to process voice input:', error);
-      toast.error('Failed to process voice input. Check server connection.');
+      
+      if (error.code === 'ERR_NETWORK') {
+        toast.error('Failed to connect to Python backend. Is your server running?');
+      } else {
+        toast.error('Failed to process voice input. Check server connection.');
+      }
+      
       throw error;
     }
   },
