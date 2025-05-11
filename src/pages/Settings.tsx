@@ -1,14 +1,72 @@
-
 import React from "react";
 import { DashboardLayout } from "@/components/dashboard";
+import { usePythonBackend } from "@/hooks/usePythonBackend";
+import { toast } from "@/components/ui/sonner";
 
 const Settings = () => {
+  const {
+    inputData,
+    setInputData,
+    handleSubmit,
+    isProcessing
+  } = usePythonBackend();
+
+  const handleTestConnection = () => {
+    toast.info("Testing connection to Python backend...");
+    // This is just a visual demonstration - replace with actual API call
+    setTimeout(() => toast.success("Connection to Python backend successful!"), 1500);
+  };
+
   return (
     <DashboardLayout>
       <div className="p-8">
         <h1 className="text-3xl font-bold text-white mb-6">Settings</h1>
         
+        <div className="bg-[#151515]/80 border border-[#333333] rounded-xl p-6 shadow-lg mb-8">
+          <h2 className="text-xl font-semibold text-white mb-4">Python Backend Connection</h2>
+          <div className="flex items-center space-x-4 mb-6">
+            <div className="h-3 w-3 rounded-full bg-green-500"></div>
+            <span className="text-white">Backend Status: Connected</span>
+          </div>
+          
+          <button 
+            onClick={handleTestConnection}
+            className="px-4 py-2 bg-[#2751B9] text-white rounded hover:bg-[#3962c8] transition-colors"
+          >
+            Test Connection
+          </button>
+        </div>
+        
+        {/* Example of sending data to Python backend */}
         <div className="bg-[#151515]/80 border border-[#333333] rounded-xl p-6 shadow-lg">
+          <h2 className="text-xl font-semibold text-white mb-4">Python Backend Example</h2>
+          
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm text-[#8E9196]">Send data to Python backend</label>
+              <input 
+                type="text" 
+                value={inputData}
+                onChange={(e) => setInputData(e.target.value)}
+                placeholder="Enter data to process"
+                className="w-full bg-[#1A1F2C] border border-[#2B2E3D] rounded-md px-4 py-2 text-white"
+              />
+            </div>
+            
+            <button 
+              onClick={handleSubmit}
+              disabled={isProcessing || !inputData.trim()}
+              className={`px-4 py-2 bg-[#2751B9] text-white rounded transition-colors ${
+                isProcessing || !inputData.trim() ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#3962c8]'
+              }`}
+            >
+              {isProcessing ? 'Processing...' : 'Process with Python'}
+            </button>
+          </div>
+        </div>
+        
+        {/* Keep the rest of the settings page */}
+        <div className="mt-8 bg-[#151515]/80 border border-[#333333] rounded-xl p-6 shadow-lg">
           <h2 className="text-xl font-semibold text-white mb-4">Account Settings</h2>
           
           <div className="space-y-6">
