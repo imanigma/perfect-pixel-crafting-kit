@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { 
@@ -17,8 +16,9 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { Brain, RefreshCw, MessageSquare } from "lucide-react";
+import { Brain, RefreshCw, MessageSquare, DollarSign } from "lucide-react";
 import { motion } from "framer-motion";
+import { BuffettPortfolio } from "@/components/advisors/BuffettPortfolio";
 
 const advisors = [
   {
@@ -65,12 +65,17 @@ export default function AIAdvisor() {
   const [messages, setMessages] = useState<{role: string; content: string}[]>([
     { role: 'system', content: insights[0].content }
   ]);
+  const [showBuffettPortfolio, setShowBuffettPortfolio] = useState(false);
 
   const handleAdvisorChange = (value: string) => {
     const advisor = advisors.find(a => a.id === value) || advisors[0];
     setSelectedAdvisor(advisor);
     const advisorInsight = insights.find(i => i.advisor === value) || insights[0];
     setMessages([{ role: 'system', content: advisorInsight.content }]);
+    // Hide portfolio view when switching advisors
+    if (value !== "buffett") {
+      setShowBuffettPortfolio(false);
+    }
   };
 
   const handleGenerateInsight = () => {
@@ -104,7 +109,7 @@ export default function AIAdvisor() {
   return (
     <div className="flex min-h-screen bg-[#000000]">
       <Sidebar />
-      <div className="flex-1 p-8">
+      <div className="flex-1 p-8 overflow-y-auto">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-3 mb-2">
             <Brain className="h-6 w-6 text-[#2751B9]" />
@@ -150,7 +155,7 @@ export default function AIAdvisor() {
                 <div className="text-sm text-[#8E9196] mb-4">
                   <strong className="text-white">Investment Style:</strong> {selectedAdvisor.style}
                 </div>
-                <div className="flex gap-3">
+                <div className="flex gap-3 flex-wrap">
                   <Button 
                     onClick={handleGenerateInsight} 
                     disabled={isGenerating}
@@ -167,10 +172,31 @@ export default function AIAdvisor() {
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Ask a Question
                   </Button>
+                  {selectedAdvisor.id === "buffett" && (
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowBuffettPortfolio(!showBuffettPortfolio)}
+                      className="border-[#2751B9] text-white hover:bg-[#1c1c1c]"
+                    >
+                      <DollarSign className="h-4 w-4 mr-2" />
+                      {showBuffettPortfolio ? "Hide" : "Show"} Buffett's Portfolio
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>
           </div>
+          
+          {selectedAdvisor.id === "buffett" && showBuffettPortfolio && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="mb-8"
+            >
+              <BuffettPortfolio />
+            </motion.div>
+          )}
           
           <Card className="bg-[#151515] border-[#333945] text-white">
             <CardHeader>
